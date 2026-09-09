@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products & Solutions | TradeAxis Global Ventures</title>
+  <meta name="description" content="Explore TradeAxis Global Ventures' portfolio of industrial products: Jute products, plastic raw materials, masterbatch, packaging films, pharmaceutical blister foils, food ingredients, and industrial machinery.">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Top Utility Bar -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <span>📍 Corporate Office: Dhaka, Bangladesh</span>
+        <a href="mailto:info@tradeaxisgv.com">✉️ info@tradeaxisgv.com</a>
+        <a href="tel:+8801700000000">📞 +880 (Trade Desk)</a>
+      </div>
+      <div class="top-bar-right">
+        <span>Global Sourcing Hub: Asia • Middle East • Europe • North America</span>
+        <a href="downloads.html">📑 Corporate Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="brand-logo" aria-label="TradeAxis Global Ventures">
+        <img src="assets/images/logo.png" alt="TradeAxis Global Ventures Logo">
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="about.html" class="nav-link">About Us</a></li>
+          
+          <li class="nav-item has-dropdown">
+            <a href="divisions.html" class="nav-link">
+              Business Divisions
+              <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="divisions.html#export">Export Division<span class="sub-desc">Sustainable Jute Products</span></a></li>
+              <li><a href="divisions.html#import">Import & Indenting<span class="sub-desc">Industrial Polymers & Chemicals</span></a></li>
+              <li><a href="divisions.html#machinery">Industrial Machinery<span class="sub-desc">Custom Equipment Sourcing</span></a></li>
+              <li><a href="divisions.html#local">Local Trading<span class="sub-desc">Domestic Supply Support</span></a></li>
+              <li><a href="healthbridge.html">HealthBridge Venture<span class="sub-desc">International Healthcare Referral</span></a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item has-dropdown">
+            <a href="products.html" class="nav-link active">
+              Products & Solutions
+              <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="products.html?cat=jute">Sustainable Jute Products</a></li>
+              <li><a href="products.html?cat=plastic">Plastic Raw Materials & Resins</a></li>
+              <li><a href="products.html?cat=masterbatch">Masterbatch Solutions</a></li>
+              <li><a href="products.html?cat=packaging">Advanced Packaging Materials</a></li>
+              <li><a href="products.html?cat=pharma">Pharmaceutical Packaging & Security</a></li>
+              <li><a href="products.html?cat=food">Food Industry Ingredients</a></li>
+              <li><a href="products.html?cat=machinery">Industrial Machinery Solutions</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item"><a href="industries.html" class="nav-link">Industries</a></li>
+          <li class="nav-item"><a href="partners.html" class="nav-link">Global Partners</a></li>
+          <li class="nav-item"><a href="news.html" class="nav-link">News & Insights</a></li>
+          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-primary btn-sm" data-open-rfq>Request a Quote</button>
+        <button class="mobile-toggle" aria-label="Toggle navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Banner -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <span class="current">Products & Solutions</span>
+      </div>
+      <div class="badge-gold">Commercial Catalog</div>
+      <h1>Our Products & Solutions</h1>
+      <p>Delivering high-performance industrial raw materials, sustainable export goods, and customized machinery across global supply chains.</p>
+    </div>
+  </section>
+
+  <!-- Dynamic Filter Bar -->
+  <section class="section-py-sm" style="background: var(--light-bg); border-bottom: 1px solid var(--light-border); position: sticky; top: 72px; z-index: 100;">
+    <div class="container">
+      <div class="catalog-filter-bar">
+        <button class="filter-btn active" data-filter="all">All Solutions</button>
+        <button class="filter-btn" data-filter="jute">Jute Products</button>
+        <button class="filter-btn" data-filter="plastic">Plastic Raw Materials</button>
+        <button class="filter-btn" data-filter="masterbatch">Masterbatch</button>
+        <button class="filter-btn" data-filter="packaging">Packaging Materials</button>
+        <button class="filter-btn" data-filter="pharma">Pharma Packaging</button>
+        <button class="filter-btn" data-filter="food">Food Ingredients</button>
+        <button class="filter-btn" data-filter="machinery">Machinery</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog Grid -->
+  <section class="section-py">
+    <div class="container">
+      <div class="card-grid" id="productGrid">
+
+        <!-- CATEGORY: JUTE -->
+        <div class="product-item-card division-card" data-category="jute">
+          <div class="card-thumb">
+            <img src="assets/images/jute-sustainable-export.jpg" alt="Natural Jute Rugs">
+            <span class="badge-tag">Jute Products</span>
+          </div>
+          <div class="card-body">
+            <h3>Natural Braided Jute Rugs</h3>
+            <span class="sub-title">100% Biodegradable & Handwoven</span>
+            <p>Export-grade natural jute rugs crafted with intricate braided patterns. Suitable for eco-conscious home décor, international furniture retailers, and boutique hospitality spaces.</p>
+            <div class="card-tags">
+              <span>Natural Fibers</span>
+              <span>Multiple Dimensions</span>
+              <span>Heavy Duty Weave</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Natural Jute Rugs">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="jute">
+          <div class="card-thumb">
+            <img src="assets/images/jute-sustainable-export.jpg" alt="Custom Jute Tote Bags">
+            <span class="badge-tag">Jute Products</span>
+          </div>
+          <div class="card-body">
+            <h3>Custom Jute Tote & Fashion Bags</h3>
+            <span class="sub-title">Sustainable Retail & Promotional Bags</span>
+            <p>Durable, laminated or unlaminated eco-friendly jute shopping totes with padded cotton or rope handles. Fully customizable with screen printing or private branding for global department stores.</p>
+            <div class="card-tags">
+              <span>Custom Screen Printing</span>
+              <span>Cotton Handles</span>
+              <span>Retail Packaging</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Jute Tote Bags">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="jute">
+          <div class="card-thumb">
+            <img src="assets/images/jute-sustainable-export.jpg" alt="Handcrafted Jute Baskets & Décor">
+            <span class="badge-tag">Jute Products</span>
+          </div>
+          <div class="card-body">
+            <h3>Handcrafted Baskets & Home Décor</h3>
+            <span class="sub-title">Lifestyle Storage & Tableware</span>
+            <p>Hand-coiled jute laundry hampers, nested storage baskets, decorative wall hangings, and dining table runners designed for modern minimalist interiors.</p>
+            <div class="card-tags">
+              <span>Eco Lifestyle</span>
+              <span>Handmade</span>
+              <span>US/EU Compliance</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Jute Baskets & Decor">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY: PLASTIC RAW MATERIALS -->
+        <div class="product-item-card division-card" data-category="plastic">
+          <div class="card-thumb">
+            <img src="assets/images/plastic-polymers-masterbatch.jpg" alt="HDPE Resins">
+            <span class="badge-tag">Plastic Raw Materials</span>
+          </div>
+          <div class="card-body">
+            <h3>HDPE (High-Density Polyethylene)</h3>
+            <span class="sub-title">Blow Molding, Injection & Pipe Extrusion</span>
+            <p>Prime virgin and near-prime HDPE grades offering excellent rigidity, impact resistance, and environmental stress crack resistance (ESCR) for bottles, caps, crates, and pressure pipes.</p>
+            <div class="card-tags">
+              <span>Blow Molding</span>
+              <span>Injection Grade</span>
+              <span>Film Extrusion</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="HDPE Resins">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="plastic">
+          <div class="card-thumb">
+            <img src="assets/images/plastic-polymers-masterbatch.jpg" alt="LDPE & LLDPE Polymers">
+            <span class="badge-tag">Plastic Raw Materials</span>
+          </div>
+          <div class="card-body">
+            <h3>LDPE & LLDPE Film Grades</h3>
+            <span class="sub-title">Blown Film & Rotomolding Grades</span>
+            <p>High optical clarity, superior tensile strength, and puncture resistance. Ideal for packaging films, agricultural sheeting, shrink wrapping, and rotational molding applications.</p>
+            <div class="card-tags">
+              <span>Film Grade</span>
+              <span>High Clarity</span>
+              <span>Puncture Resistant</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="LDPE & LLDPE">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="plastic">
+          <div class="card-thumb">
+            <img src="assets/images/plastic-polymers-masterbatch.jpg" alt="Polypropylene Resins">
+            <span class="badge-tag">Plastic Raw Materials</span>
+          </div>
+          <div class="card-body">
+            <h3>Polypropylene (PP) Homopolymer & Copolymer</h3>
+            <span class="sub-title">Woven Sacks, Thermoforming & Automotive</span>
+            <p>Homopolymer for raffia tape, woven bags, and monofilament. Random and block copolymers for high clarity food containers, thermoforming sheets, and durable consumer housewares.</p>
+            <div class="card-tags">
+              <span>Raffia Grade</span>
+              <span>Random Copolymer</span>
+              <span>Injection Grade</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Polypropylene Resins">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY: MASTERBATCH -->
+        <div class="product-item-card division-card" data-category="masterbatch">
+          <div class="card-thumb">
+            <img src="assets/images/plastic-polymers-masterbatch.jpg" alt="White & Black Masterbatch">
+            <span class="badge-tag">Masterbatch</span>
+          </div>
+          <div class="card-body">
+            <h3>White & Black Masterbatch</h3>
+            <span class="sub-title">High Opacity & Deep Jetness Formulations</span>
+            <p>White masterbatch with up to 70% rutile titanium dioxide for exceptional opacity and UV protection. Carbon black masterbatch with ultra-fine particle dispersion for smooth surface finish.</p>
+            <div class="card-tags">
+              <span>Up to 70% TiO2</span>
+              <span>High Jetness Carbon</span>
+              <span>Food Contact Safe</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="White & Black Masterbatch">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="masterbatch">
+          <div class="card-thumb">
+            <img src="assets/images/plastic-polymers-masterbatch.jpg" alt="Color & Additive Masterbatch">
+            <span class="badge-tag">Masterbatch</span>
+          </div>
+          <div class="card-body">
+            <h3>Custom Color & Additive Masterbatch</h3>
+            <span class="sub-title">UV Stabilizers, Optical Brighteners & Slip Agents</span>
+            <p>Precision color matching according to Pantone/RAL standards. Performance additive masterbatches including anti-static, anti-block, UV stabilizers, processing aids, and calcium carbonate filler concentrates.</p>
+            <div class="card-tags">
+              <span>Pantone Matching</span>
+              <span>UV Stabilizers</span>
+              <span>CaCO3 Filler</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Color & Additive Masterbatch">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY: PACKAGING -->
+        <div class="product-item-card division-card" data-category="packaging">
+          <div class="card-thumb">
+            <img src="assets/images/pharma-packaging-security.jpg" alt="BOPP Packaging Films">
+            <span class="badge-tag">Packaging Materials</span>
+          </div>
+          <div class="card-body">
+            <h3>BOPP Films & Specialty Substrates</h3>
+            <span class="sub-title">Plain, Heat-Sealable, Matte & Metalized</span>
+            <p>Biaxially Oriented Polypropylene (BOPP) films designed for high-speed printing, laminating, and confectionery packaging. Exceptional barrier properties against moisture and gases.</p>
+            <div class="card-tags">
+              <span>Plain & Matte</span>
+              <span>Heat-Sealable</span>
+              <span>Metalized Barrier</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="BOPP Packaging Films">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="packaging">
+          <div class="card-thumb">
+            <img src="assets/images/pharma-packaging-security.jpg" alt="OPP Tape Jumbo Rolls">
+            <span class="badge-tag">Packaging Materials</span>
+          </div>
+          <div class="card-body">
+            <h3>OPP Tape Jumbo Rolls & In-Mould Labels</h3>
+            <span class="sub-title">Converting Raw Materials & High-Definition IML</span>
+            <p>Large format BOPP tape jumbo rolls with water-based acrylic adhesive for domestic tape slitting. High-definition In-Mould Labels (IML) and heat transfer printing films for plastic packaging containers.</p>
+            <div class="card-tags">
+              <span>Jumbo Tape Rolls</span>
+              <span>In-Mould Labels (IML)</span>
+              <span>Heat Transfer</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="OPP Tape Jumbo Rolls">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY: PHARMACEUTICAL -->
+        <div class="product-item-card division-card" data-category="pharma" style="border: 2px solid var(--primary);">
+          <div class="card-thumb">
+            <img src="assets/images/pharma-packaging-security.jpg" alt="Pharma Blister Foils">
+            <span class="badge-tag" style="background: var(--primary); color: #FFF;">Pharma Packaging</span>
+          </div>
+          <div class="card-body">
+            <h3>Blister Foils & Alu-Alu Barrier Foils</h3>
+            <span class="sub-title">Class 100,000 Cleanroom Certified</span>
+            <p>Medical-grade printed and plain aluminum push-through blister foils and cold-form Alu-Alu laminates offering zero moisture, oxygen, and light penetration for sensitive solid oral dosage formulations.</p>
+            <div class="card-tags">
+              <span>Push-Through Foil</span>
+              <span>Cold-Form Alu-Alu</span>
+              <span>GMP Compliant</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-primary btn-sm" data-open-rfq data-product="Pharma Blister Foils">Request Technical Data</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="pharma" style="border: 2px solid var(--primary);">
+          <div class="card-thumb">
+            <img src="assets/images/pharma-packaging-security.jpg" alt="Anti Counterfeit Solutions">
+            <span class="badge-tag" style="background: var(--primary); color: #FFF;">Pharma Packaging</span>
+          </div>
+          <div class="card-body">
+            <h3>Anti-Counterfeit Holographic Solutions</h3>
+            <span class="sub-title">Brand Protection & Tamper Evident Technologies</span>
+            <p>High-security optical holograms, void-evident security seals, variable 2D QR serialization, and security-printed foil substrates engineered to prevent unauthorized medicine duplication and grey-market diversion.</p>
+            <div class="card-tags">
+              <span>Optical Holography</span>
+              <span>Tamper Evident</span>
+              <span>2D Serialization</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-primary btn-sm" data-open-rfq data-product="Anti-Counterfeit Packaging">Request Technical Data</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY: FOOD INGREDIENTS -->
+        <div class="product-item-card division-card" data-category="food">
+          <div class="card-thumb">
+            <img src="assets/images/food-ingredients-sourcing.jpg" alt="Milk Powder Ingredients">
+            <span class="badge-tag">Food Ingredients</span>
+          </div>
+          <div class="card-body">
+            <h3>Full Cream & Skimmed Milk Powder</h3>
+            <span class="sub-title">Imported Dairy Solids for Processing</span>
+            <p>Premium imported dairy powders sourced from certified Oceania and European dairy producers. Consistent fat, protein, and moisture composition for dairy processing, confectionery, and bakery manufacturing.</p>
+            <div class="card-tags">
+              <span>Full Cream (FCMP)</span>
+              <span>Skimmed (SMP)</span>
+              <span>Halal Certified</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Milk Powder Ingredients">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="food">
+          <div class="card-thumb">
+            <img src="assets/images/food-ingredients-sourcing.jpg" alt="Ice Cream Stabilizers">
+            <span class="badge-tag">Food Ingredients</span>
+          </div>
+          <div class="card-body">
+            <h3>Ice Cream Stabilizers & Functional Hydrocolloids</h3>
+            <span class="sub-title">Texture Optimization & Melt Resistance</span>
+            <p>Specialized emulsifier-stabilizer blends engineered to optimize overrun, ensure smooth mouthfeel, and provide freeze-thaw stability in premium ice creams and frozen desserts. Also supplying Xanthan & Guar gums.</p>
+            <div class="card-tags">
+              <span>Stabilizer Blends</span>
+              <span>Melt Resistance</span>
+              <span>Hydrocolloids</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Food Stabilizers & Emulsifiers">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATEGORY: MACHINERY -->
+        <div class="product-item-card division-card" data-category="machinery">
+          <div class="card-thumb">
+            <img src="assets/images/industrial-machinery-sourcing.jpg" alt="Plastic & Packaging Machinery">
+            <span class="badge-tag">Machinery Sourcing</span>
+          </div>
+          <div class="card-body">
+            <h3>Plastic & Packaging Machinery</h3>
+            <span class="sub-title">Extrusion, Molding & Converting Lines</span>
+            <p>Energy-efficient plastic injection molding machines, blown film extrusion lines, automatic high-speed slitter rewinders, and flow wrapping machinery sourced directly from verified Chinese and European manufacturers.</p>
+            <div class="card-tags">
+              <span>Injection Molding</span>
+              <span>Film Extrusion</span>
+              <span>Slitter Rewinders</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Plastic & Packaging Machinery">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-item-card division-card" data-category="machinery">
+          <div class="card-thumb">
+            <img src="assets/images/industrial-machinery-sourcing.jpg" alt="Pharma & Food Equipment">
+            <span class="badge-tag">Machinery Sourcing</span>
+          </div>
+          <div class="card-body">
+            <h3>Pharmaceutical & Food Processing Equipment</h3>
+            <span class="sub-title">cGMP Compliant Cleanroom Machinery</span>
+            <p>Continuous ice cream freezers, pasteurization units, automated blister sealing and cartoning lines, tablet presses, and liquid filling lines built to cGMP and sanitary food safety standards.</p>
+            <div class="card-tags">
+              <span>cGMP Compliant</span>
+              <span>Continuous Freezers</span>
+              <span>Blister Packaging</span>
+            </div>
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="Pharma & Food Machinery">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Inquiry Section -->
+  <section class="section-py" style="background: var(--dark-bg); color: #FFFFFF; text-align: center;">
+    <div class="container" style="max-width: 800px;">
+      <div class="badge-gold">Custom Inquiries</div>
+      <h2 style="color: #FFFFFF; margin: 1rem 0;">Need a Specific Product Grade or Custom Specification?</h2>
+      <p style="color: #CBD5E1; font-size: 1.05rem; margin-bottom: 2rem;">
+        Our technical sourcing desk specializes in matching exact chemical indices, film barrier ratings, or customized equipment parameters from our verified supplier network.
+      </p>
+      <button class="btn btn-primary btn-lg" data-open-rfq>Submit Technical Requirements</button>
+    </div>
+  </section>
+
+  <!-- Master Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="assets/images/logo-white.png" alt="TradeAxis Global Ventures" class="f-logo">
+          <p>TradeAxis Global Ventures is a diversified international trading company connecting markets through reliable sourcing, export-import excellence, and customized supply chain solutions since 2020.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Business Divisions</h4>
+          <ul class="footer-links">
+            <li><a href="divisions.html#export">Export Division (Jute)</a></li>
+            <li><a href="divisions.html#import">Import & Indenting</a></li>
+            <li><a href="divisions.html#machinery">Industrial Machinery</a></li>
+            <li><a href="divisions.html#local">Local Trading</a></li>
+            <li><a href="healthbridge.html">HealthBridge Healthcare</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="about.html">About Company</a></li>
+            <li><a href="products.html">Product Catalog</a></li>
+            <li><a href="industries.html">Industries Served</a></li>
+            <li><a href="partners.html">Become a Partner</a></li>
+            <li><a href="downloads.html">Downloads Center</a></li>
+            <li><a href="news.html">News & Insights</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Corporate Office</h4>
+          <div class="footer-contact-item">
+            <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+            <span>TradeAxis Global Ventures<br>Dhaka, Bangladesh</span>
+          </div>
+          <div class="footer-contact-item">
+            <svg fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            <span>info@tradeaxisgv.com</span>
+          </div>
+          <div style="margin-top: 1rem;">
+            <button class="btn btn-outline-gold btn-sm" data-open-rfq>Submit Business RFQ</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2020–2026 TradeAxis Global Ventures. All Rights Reserved.</div>
+        <div class="footer-legal">
+          <a href="legal.html#privacy">Privacy Policy</a>
+          <a href="legal.html#terms">Terms & Conditions</a>
+          <a href="legal.html#cookies">Cookie Policy</a>
+          <a href="legal.html#disclaimer">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- RFQ Modal -->
+  <div class="modal-overlay" id="rfqModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Request Sourcing / Quotation</h3>
+        <button class="modal-close" data-close-rfq aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form data-ajax-form>
+          <div class="form-grid-2">
+            <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-control" required placeholder="John Doe"></div>
+            <div class="form-group"><label class="form-label">Company Name *</label><input type="text" class="form-control" required placeholder="Apex Enterprises Ltd."></div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group"><label class="form-label">Corporate Email *</label><input type="email" class="form-control" required placeholder="purchasing@company.com"></div>
+            <div class="form-group"><label class="form-label">Phone / WhatsApp *</label><input type="tel" class="form-control" required placeholder="+1 (555) 000-0000"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product Requirement *</label>
+            <select class="form-control" id="rfqProductSelect" required>
+              <option value="">Select a Category</option>
+              <option value="Sustainable Jute Products">Sustainable Jute Products (Export)</option>
+              <option value="Plastic Raw Materials">Plastic Raw Materials & Resins</option>
+              <option value="Masterbatch Solutions">Masterbatch Solutions</option>
+              <option value="Packaging Materials">BOPP & Packaging Substrates</option>
+              <option value="Pharmaceutical Packaging">Pharmaceutical Packaging & Blister Foils</option>
+              <option value="Food Ingredients">Food & Ice Cream Ingredients</option>
+              <option value="Industrial Machinery">Industrial Machinery Sourcing</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Specifications / Message *</label>
+            <textarea class="form-control" required placeholder="Specify grade, technical requirements, target quantity..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Transmit Sourcing Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
