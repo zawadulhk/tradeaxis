@@ -6,7 +6,7 @@
     "start": "npx serve . -l 3000",
     "dev": "npx serve . -l 3000",
     "serve": "npx serve . -l 3000",
-    "build": "echo TradeAxis website is a high-performance static site (HTML5/CSS3/JS). No build step required; all files are ready for deployment!"
+    "build": "echo \"Build complete - static site ready for deployment\""
   },
   "keywords": [
     "tradeaxis",
