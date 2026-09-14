@@ -60,21 +60,72 @@ function initMobileNav() {
   });
 }
 
-/* --- RFQ / Sourcing Modal --- */
+/* --- Unified Form Controller & Field Toggler --- */
+function updateFormFields(form, type) {
+  if (!form) return;
+  const rfqFields = form.querySelector('.rfq-fields');
+  const generalFields = form.querySelector('.general-fields');
+  const submitBtn = form.querySelector('.submit-inquiry-btn') || form.querySelector('button[type="submit"]');
+  const productSelect = form.querySelector('.rfq-product-select');
+  const generalSubject = form.querySelector('.general-subject-input');
+  const messageArea = form.querySelector('textarea[name="message"]');
+
+  if (type === 'rfq') {
+    if (rfqFields) rfqFields.style.display = 'block';
+    if (generalFields) generalFields.style.display = 'none';
+    if (productSelect) productSelect.required = true;
+    if (generalSubject) generalSubject.required = false;
+    if (submitBtn) submitBtn.textContent = 'Submit Request for Quotation';
+    if (messageArea) {
+      messageArea.placeholder = 'Specify grade, technical specifications, volume, delivery schedules, or message details...';
+    }
+  } else {
+    if (rfqFields) rfqFields.style.display = 'none';
+    if (generalFields) generalFields.style.display = 'block';
+    if (productSelect) productSelect.required = false;
+    if (generalSubject) generalSubject.required = true;
+    if (submitBtn) submitBtn.textContent = 'Transmit Message to Trade Desk';
+    if (messageArea) {
+      messageArea.placeholder = 'Provide details regarding your inquiry, partnership interest, or questions...';
+    }
+  }
+}
+
+/* --- Inquiry / RFQ Modal --- */
 function initRfqModal() {
   const modal = document.getElementById('rfqModal');
   const openButtons = document.querySelectorAll('[data-open-rfq]');
+  const contactButtons = document.querySelectorAll('[data-open-contact]');
   const closeButtons = document.querySelectorAll('[data-close-rfq]');
-  const productInput = document.getElementById('rfqProductSelect');
 
   if (!modal) return;
+
+  const form = modal.querySelector('form');
+  const typeSelect = modal.querySelector('.inquiry-type-select');
+  const productInput = modal.querySelector('.rfq-product-select') || document.getElementById('rfqProductSelect');
 
   openButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      if (typeSelect) {
+        typeSelect.value = 'rfq';
+        updateFormFields(form, 'rfq');
+      }
       const preselect = btn.getAttribute('data-product') || '';
       if (productInput && preselect) {
         productInput.value = preselect;
+      }
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  contactButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeSelect) {
+        typeSelect.value = 'general';
+        updateFormFields(form, 'general');
       }
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -139,16 +190,28 @@ function initProductFilter() {
 
 /* --- Form Submissions & Toast Notifications --- */
 function initForms() {
+  // Initialize dynamic field toggling on all inquiry forms
+  document.querySelectorAll('.inquiry-type-select').forEach(select => {
+    const form = select.closest('form');
+    select.addEventListener('change', () => {
+      updateFormFields(form, select.value);
+    });
+    // Set initial display based on selected value
+    updateFormFields(form, select.value);
+  });
+
   const forms = document.querySelectorAll('form[data-ajax-form]');
   forms.forEach(form => {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Submit';
+      const typeSelect = form.querySelector('.inquiry-type-select');
+      const inquiryType = typeSelect ? typeSelect.value : 'rfq';
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Submitting...';
+        submitBtn.innerHTML = 'Transmitting...';
       }
 
       setTimeout(() => {
@@ -164,8 +227,15 @@ function initForms() {
           document.body.style.overflow = '';
         }
 
-        showToast('Thank you! Your inquiry has been transmitted to our trade desk. Our representative will contact you within 24 hours.');
+        const successMsg = inquiryType === 'rfq'
+          ? 'Thank you! Your quotation request has been transmitted to our trade desk. Our representative will contact you within 24 hours.'
+          : 'Thank you! Your message has been transmitted to TradeAxis. We will respond to your inquiry shortly.';
+
+        showToast(successMsg);
         form.reset();
+        if (typeSelect) {
+          updateFormFields(form, typeSelect.value);
+        }
       }, 1000);
     });
   });

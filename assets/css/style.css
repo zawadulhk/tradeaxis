@@ -1019,6 +1019,21 @@ textarea.form-control {
   gap: 1.25rem;
 }
 
+.rfq-fields, .general-fields {
+  animation: formFadeIn 0.25s ease-in-out;
+}
+
+@keyframes formFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;

@@ -201,69 +201,17 @@
     </div>
   </section>
 
-  <!-- Partner Inquiry Form -->
-  <section class="section-py" style="background: var(--light-bg);">
-    <div class="container" style="max-width: 860px;">
-      <div class="section-header">
-        <div class="badge-gold">Connect With Us</div>
-        <h2>Explore a Partnership Opportunity</h2>
-        <p>Tell us about your organization and how we can collaborate to expand trade opportunities.</p>
-      </div>
-
-      <div style="background: #FFFFFF; padding: 3rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--light-border);">
-        <form data-ajax-form>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Full Name *</label>
-              <input type="text" class="form-control" required placeholder="John Doe">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Job Title / Designation *</label>
-              <input type="text" class="form-control" required placeholder="Director of International Sales">
-            </div>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Company / Organization *</label>
-              <input type="text" class="form-control" required placeholder="Global Polymer Solutions Corp">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Country / Headquarters *</label>
-              <input type="text" class="form-control" required placeholder="South Korea / Germany / USA">
-            </div>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">Corporate Email *</label>
-              <input type="email" class="form-control" required placeholder="partnerships@company.com">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Phone / WhatsApp *</label>
-              <input type="tel" class="form-control" required placeholder="+1 555-0199">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Partnership Interest *</label>
-            <select class="form-control" required>
-              <option value="">Select Partnership Type</option>
-              <option value="Global Manufacturer seeking Agent">Global Manufacturer seeking Representation in Bangladesh</option>
-              <option value="Industrial Buyer seeking Sourcing">Industrial Enterprise seeking Sourcing Services</option>
-              <option value="International Jute Buyer">International Buyer seeking Jute Product Exports</option>
-              <option value="Machinery Supplier">Machinery Manufacturer seeking Sourcing Collaboration</option>
-              <option value="Healthcare Provider">Hospital / Healthcare Provider for HealthBridge</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Company Profile & Proposed Collaboration Scope *</label>
-            <textarea class="form-control" required placeholder="Describe your product portfolio, production capacity, certifications, and collaboration goals..."></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Submit Partnership Proposal</button>
-        </form>
+  <!-- Partnership CTA Section -->
+  <section class="section-py" style="background: var(--light-bg); text-align: center;">
+    <div class="container" style="max-width: 820px;">
+      <div class="badge-gold">Partner With Us</div>
+      <h2 style="font-size: clamp(2rem, 3.2vw, 2.5rem); margin: 1rem 0 1.25rem 0;">Ready to Collaborate with TradeAxis?</h2>
+      <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2.25rem; line-height: 1.8;">
+        Whether you are an international manufacturer seeking trusted representation in Bangladesh or an enterprise seeking dependable trade execution, our global trade desk is ready to collaborate.
+      </p>
+      <div style="display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap;">
+        <a href="contact.html" class="btn btn-primary btn-lg">Contact Our Trade Desk →</a>
+        <button class="btn btn-outline-dark btn-lg" data-open-rfq>Request Sourcing Quote</button>
       </div>
     </div>
   </section>
@@ -325,41 +273,86 @@
     </div>
   </footer>
 
-  <!-- RFQ Modal -->
+  <!-- Unified Modal -->
   <div class="modal-overlay" id="rfqModal">
     <div class="modal-container">
       <div class="modal-header">
-        <h3>Request Sourcing / Quotation</h3>
+        <h3>Inquire or Request a Quote</h3>
         <button class="modal-close" data-close-rfq aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body">
-        <form data-ajax-form>
-          <div class="form-grid-2">
-            <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-control" required placeholder="John Doe"></div>
-            <div class="form-group"><label class="form-label">Company Name *</label><input type="text" class="form-control" required placeholder="Apex Enterprises Ltd."></div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group"><label class="form-label">Corporate Email *</label><input type="email" class="form-control" required placeholder="purchasing@company.com"></div>
-            <div class="form-group"><label class="form-label">Phone / WhatsApp *</label><input type="tel" class="form-control" required placeholder="+1 (555) 000-0000"></div>
-          </div>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Select your inquiry type below. Our trade desk will evaluate your requirements and respond promptly.
+        </p>
+        <form data-ajax-form class="unified-form">
           <div class="form-group">
-            <label class="form-label">Product Requirement *</label>
-            <select class="form-control" id="rfqProductSelect" required>
-              <option value="">Select a Category</option>
-              <option value="Sustainable Jute Products">Sustainable Jute Products (Export)</option>
-              <option value="Plastic Raw Materials">Plastic Raw Materials & Resins</option>
-              <option value="Masterbatch Solutions">Masterbatch Solutions</option>
-              <option value="Packaging Materials">BOPP & Packaging Substrates</option>
-              <option value="Pharmaceutical Packaging">Pharmaceutical Packaging & Blister Foils</option>
-              <option value="Food Ingredients">Food & Ice Cream Ingredients</option>
-              <option value="Industrial Machinery">Industrial Machinery Sourcing</option>
+            <label class="form-label">Inquiry Purpose / Type *</label>
+            <select class="form-control inquiry-type-select" name="inquiry_type" required>
+              <option value="rfq">Request for Quotation (RFQ) / Commercial Sourcing</option>
+              <option value="general">General Inquiry / Contact Desk</option>
             </select>
           </div>
-          <div class="form-group">
-            <label class="form-label">Specifications / Message *</label>
-            <textarea class="form-control" required placeholder="Specify grade, technical requirements, target quantity..."></textarea>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-control" name="full_name" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Company Name *</label>
+              <input type="text" class="form-control" name="company_name" required placeholder="Apex Enterprises Ltd.">
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Transmit Sourcing Request</button>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Corporate Email *</label>
+              <input type="email" class="form-control" name="email" required placeholder="purchasing@company.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone / WhatsApp *</label>
+              <input type="tel" class="form-control" name="phone" required placeholder="+880 1700 000 000">
+            </div>
+          </div>
+
+          <!-- Dynamic RFQ Fields -->
+          <div class="rfq-fields">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Product / Commodity Requirement *</label>
+                <select class="form-control rfq-product-select" name="product_requirement">
+                  <option value="">Select a Product Category</option>
+                  <option value="Sustainable Jute Products">Sustainable Jute Products (Export)</option>
+                  <option value="Plastic Raw Materials">Plastic Raw Materials & Resins</option>
+                  <option value="Masterbatch Solutions">Masterbatch Solutions (Color/Additive)</option>
+                  <option value="Packaging Materials">BOPP & Packaging Substrates</option>
+                  <option value="Pharmaceutical Packaging">Pharmaceutical Packaging & Blister Foils</option>
+                  <option value="Food Ingredients">Food & Ice Cream Ingredients</option>
+                  <option value="Industrial Machinery">Industrial Machinery Sourcing</option>
+                  <option value="Other Sourcing">Other Customized Sourcing</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Estimated Volume / Target Port / Incoterms</label>
+                <input type="text" class="form-control" name="volume_port" placeholder="e.g. 2x 40ft FCL / FOB Chittagong or CIF">
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic General Contact Fields -->
+          <div class="general-fields" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">Subject *</label>
+              <input type="text" class="form-control general-subject-input" name="subject" placeholder="e.g., Corporate Partnership, Media, General Question">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label message-label">Detailed Requirements / Message *</label>
+            <textarea class="form-control" name="message" rows="4" required placeholder="Specify grade, technical specifications, volume, delivery schedules, or message details..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg submit-inquiry-btn" style="width: 100%;">Submit Request for Quotation</button>
         </form>
       </div>
     </div>
