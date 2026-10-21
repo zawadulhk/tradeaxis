@@ -1,0 +1,10 @@
+# Secrets & environment
+.env*
+
+# Reference brand files (large AI/PDF vector assets)
+Reference files/
+
+# Git & System
+.git
+.DS_Store
+Thumbs.db
