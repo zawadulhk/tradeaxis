@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       return;
     } catch (err) {
       res.writeHead(500, CORS_HEADERS);
-      res.end(JSON.stringify({ error: 'Failed to retrieve products' }));
+      res.end(JSON.stringify({ error: 'Failed to retrieve products', details: err.message }));
       return;
     }
   }
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       return;
     } catch (err) {
       res.writeHead(500, CORS_HEADERS);
-      res.end(JSON.stringify({ error: 'Failed to save product' }));
+      res.end(JSON.stringify({ error: 'Failed to save product', details: err.message }));
       return;
     }
   }
@@ -78,7 +78,7 @@ export default async function handler(req, res) {
       return;
     } catch (err) {
       res.writeHead(500, CORS_HEADERS);
-      res.end(JSON.stringify({ error: 'Failed to delete product' }));
+      res.end(JSON.stringify({ error: 'Failed to delete product', details: err.message }));
       return;
     }
   }

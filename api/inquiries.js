@@ -56,7 +56,7 @@ export default async function handler(req, res) {
       return;
     } catch (err) {
       res.writeHead(500, CORS_HEADERS);
-      res.end(JSON.stringify({ error: 'Failed to retrieve inquiries' }));
+      res.end(JSON.stringify({ error: 'Failed to retrieve inquiries', details: err.message }));
       return;
     }
   }
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
       return;
     } catch (err) {
       res.writeHead(500, CORS_HEADERS);
-      res.end(JSON.stringify({ error: 'Failed to update inquiry' }));
+      res.end(JSON.stringify({ error: 'Failed to update inquiry', details: err.message }));
       return;
     }
   }
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       return;
     } catch (err) {
       res.writeHead(500, CORS_HEADERS);
-      res.end(JSON.stringify({ error: 'Failed to delete inquiry' }));
+      res.end(JSON.stringify({ error: 'Failed to delete inquiry', details: err.message }));
       return;
     }
   }

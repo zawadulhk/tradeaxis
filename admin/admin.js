@@ -253,6 +253,18 @@ async function fetchInquiries() {
   try {
     const res = await apiFetch('/api/inquiries');
     const data = await res.json();
+    if (!res.ok) {
+      console.warn('Inquiries fetch error:', data);
+      STATE.inquiries = [];
+      const tbody = document.getElementById('inquiriesTableBody');
+      if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="7" class="table-empty" style="color:#b91c1c; padding: 2rem 1rem;">
+          <div style="font-weight:600; margin-bottom:0.4rem;">⚠️ Supabase Table Notice: ${escapeHtml(data.error || 'Inquiry query failed')}</div>
+          <div style="font-size:0.82rem; color:var(--text-muted); max-width:600px; margin:0 auto;">${escapeHtml(data.details || 'Execute supabase-schema.sql in your Supabase SQL Editor to initialize the inquiries table.')}</div>
+        </td></tr>`;
+      }
+      return;
+    }
     STATE.inquiries = data.inquiries || [];
     renderInquiriesTable();
 
@@ -272,6 +284,18 @@ async function fetchProducts() {
   try {
     const res = await apiFetch('/api/products');
     const data = await res.json();
+    if (!res.ok) {
+      console.warn('Products fetch error:', data);
+      STATE.products = [];
+      const tbody = document.getElementById('productsTableBody');
+      if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty" style="color:#b91c1c; padding: 2rem 1rem;">
+          <div style="font-weight:600; margin-bottom:0.4rem;">⚠️ Supabase Table Notice: ${escapeHtml(data.error || 'Product query failed')}</div>
+          <div style="font-size:0.82rem; color:var(--text-muted); max-width:600px; margin:0 auto;">${escapeHtml(data.details || 'Execute supabase-schema.sql in your Supabase SQL Editor to initialize the products table.')}</div>
+        </td></tr>`;
+      }
+      return;
+    }
     STATE.products = data.products || [];
     renderProductsTable();
   } catch (err) {

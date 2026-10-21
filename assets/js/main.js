@@ -113,6 +113,13 @@ function initRfqModal() {
       }
       const preselect = btn.getAttribute('data-product') || '';
       if (productInput && preselect) {
+        if (productInput.tagName === 'SELECT') {
+          let exists = Array.from(productInput.options).some(opt => opt.value === preselect);
+          if (!exists) {
+            const newOpt = new Option(preselect, preselect, true, true);
+            productInput.add(newOpt);
+          }
+        }
         productInput.value = preselect;
       }
       modal.classList.add('active');
@@ -227,13 +234,20 @@ function initForms() {
       }
 
       try {
-        await fetch('/api/inquiries', {
+        const res = await fetch('/api/inquiries', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          console.error('Inquiry submission error:', errData);
+          showToast(errData.details || errData.error || 'Submission error. Please email us directly.');
+          return;
+        }
       } catch (err) {
-        console.warn('API submission failed, handled gracefully:', err);
+        console.warn('API submission failed:', err);
       }
 
       if (submitBtn) {
