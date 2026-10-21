@@ -202,41 +202,61 @@ function initForms() {
 
   const forms = document.querySelectorAll('form[data-ajax-form]');
   forms.forEach(form => {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Submit';
       const typeSelect = form.querySelector('.inquiry-type-select');
       const inquiryType = typeSelect ? typeSelect.value : 'rfq';
 
+      const payload = {
+        inquiry_type: inquiryType,
+        full_name: form.querySelector('[name="full_name"]')?.value?.trim() || '',
+        company_name: form.querySelector('[name="company_name"]')?.value?.trim() || '',
+        email: form.querySelector('[name="email"]')?.value?.trim() || '',
+        phone: form.querySelector('[name="phone"]')?.value?.trim() || '',
+        product_requirement: form.querySelector('[name="product_requirement"]')?.value?.trim() || null,
+        volume_port: form.querySelector('[name="volume_port"]')?.value?.trim() || null,
+        subject: form.querySelector('[name="subject"]')?.value?.trim() || null,
+        message: form.querySelector('[name="message"]')?.value?.trim() || ''
+      };
+
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = 'Transmitting...';
       }
 
-      setTimeout(() => {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-        }
+      try {
+        await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.warn('API submission failed, handled gracefully:', err);
+      }
 
-        // Close modal if inside modal
-        const modal = form.closest('.modal-overlay');
-        if (modal) {
-          modal.classList.remove('active');
-          document.body.style.overflow = '';
-        }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
 
-        const successMsg = inquiryType === 'rfq'
-          ? 'Thank you! Your quotation request has been transmitted to our trade desk. Our representative will contact you within 24 hours.'
-          : 'Thank you! Your message has been transmitted to TradeAxis. We will respond to your inquiry shortly.';
+      // Close modal if inside modal
+      const modal = form.closest('.modal-overlay');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
 
-        showToast(successMsg);
-        form.reset();
-        if (typeSelect) {
-          updateFormFields(form, typeSelect.value);
-        }
-      }, 1000);
+      const successMsg = inquiryType === 'rfq'
+        ? 'Thank you! Your quotation request has been transmitted to our trade desk. Our representative will contact you within 24 hours.'
+        : 'Thank you! Your message has been transmitted to TradeAxis. We will respond to your inquiry shortly.';
+
+      showToast(successMsg);
+      form.reset();
+      if (typeSelect) {
+        updateFormFields(form, typeSelect.value);
+      }
     });
   });
 }

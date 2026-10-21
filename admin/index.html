@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeAxis Global Ventures — Command Portal</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- 1. PASSWORD GATE OVERLAY                   -->
+  <!-- ========================================== -->
+  <div id="loginGate" class="login-gate-overlay">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="../assets/images/logo.png" alt="TradeAxis Logo" class="login-logo" onerror="this.style.display='none'">
+        <div class="brand-text">
+          <h2>TRADEAXIS</h2>
+          <span>GLOBAL VENTURES</span>
+        </div>
+      </div>
+
+      <div class="login-header">
+        <h1>Command Portal</h1>
+        <p>Enter administrative passphrase to manage commercial inquiries, indenting catalog, and market intelligence.</p>
+      </div>
+
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="adminPasswordInput">Security Key / Master Passphrase</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="adminPasswordInput" placeholder="••••••••••••••" autocomplete="current-password" required>
+            <button type="button" id="togglePasswordBtn" class="toggle-pw-btn" title="Toggle visibility" aria-label="Toggle password visibility">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="login-error" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="loginErrorText">Invalid administrative password.</span>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn-primary-portal">
+          <span class="btn-text">Authenticate & Enter</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <span class="env-badge">🔒 Protected by Vercel Serverless Guard</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN ADMIN PORTAL (Revealed on Auth)    -->
+  <!-- ========================================== -->
+  <div id="adminApp" class="admin-app" style="display: none;">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button id="mobileSidebarToggle" class="sidebar-toggle-btn" aria-label="Toggle Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="admin-brand">
+          <img src="../assets/images/logo.png" alt="TradeAxis" class="portal-logo" onerror="this.style.display='none'">
+          <div>
+            <div class="brand-title">TRADEAXIS <span>PORTAL</span></div>
+            <div class="brand-sub">Commercial Trade Desk</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div id="dbStatusBadge" class="status-indicator">
+          <span class="status-dot"></span>
+          <span id="dbStatusText">Checking Backend...</span>
+        </div>
+
+        <a href="../" target="_blank" class="nav-btn-link" title="Open live website in new tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Live Site</span>
+        </a>
+
+        <button id="logoutBtn" class="logout-btn" title="Sign out of Admin Session">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="portal-layout">
+      <!-- SIDEBAR NAVIGATION -->
+      <aside id="portalSidebar" class="portal-sidebar">
+        <nav class="sidebar-nav">
+          <button class="nav-tab-btn active" data-tab="overview">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Overview</span>
+          </button>
+
+          <button class="nav-tab-btn" data-tab="inquiries">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Inquiries & RFQs</span>
+            <span id="unreadCountBadge" class="tab-counter">0</span>
+          </button>
+
+          <button class="nav-tab-btn" data-tab="products">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <span>Product Catalog</span>
+          </button>
+
+          <button class="nav-tab-btn" data-tab="news">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+            <span>Market News</span>
+          </button>
+
+          <button class="nav-tab-btn" data-tab="settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Supabase & Settings</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-pill">
+            <div class="user-avatar">WA</div>
+            <div class="user-info">
+              <span class="user-name">Wasif Khan</span>
+              <span class="user-role">Managing Director</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT VIEW AREA -->
+      <main class="portal-main">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: EXECUTIVE OVERVIEW                  -->
+        <!-- ========================================== -->
+        <section id="tab-overview" class="tab-pane active">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Executive Overview</h1>
+              <p class="view-subtitle">Commercial activity, pending quotation requests, and catalog stats.</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn-secondary" id="refreshAllBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                <span>Refresh Data</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI STAT CARDS -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon-wrap gold">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              </div>
+              <div class="metric-body">
+                <div class="metric-label">Total Leads & RFQs</div>
+                <div id="statTotalInquiries" class="metric-value">0</div>
+                <div class="metric-footnote">Captured across all pages</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-wrap cyan">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="metric-body">
+                <div class="metric-label">Pending / New Quotes</div>
+                <div id="statPendingInquiries" class="metric-value">0</div>
+                <div class="metric-footnote">Require trade desk review</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-wrap green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              </div>
+              <div class="metric-body">
+                <div class="metric-label">Active Catalog Items</div>
+                <div id="statTotalProducts" class="metric-value">0</div>
+                <div class="metric-footnote">Jute, Polymers, Pharma</div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon-wrap purple">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+              <div class="metric-body">
+                <div class="metric-label">Market Intelligence</div>
+                <div id="statTotalNews" class="metric-value">0</div>
+                <div class="metric-footnote">Published trade bulletins</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT LEADS PREVIEW -->
+          <div class="content-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <h3>Latest Commercial Inquiries</h3>
+                <span>Recent quotations submitted via corporate website</span>
+              </div>
+              <button class="btn-text-gold" onclick="switchTab('inquiries')">View All Inquiries →</button>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Prospect</th>
+                    <th>Type</th>
+                    <th>Product / Requirement</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewRecentTableBody">
+                  <tr><td colspan="6" class="table-empty">Loading records...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: INQUIRIES & RFQs CRM                -->
+        <!-- ========================================== -->
+        <section id="tab-inquiries" class="tab-pane">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Commercial Inquiries & RFQs</h1>
+              <p class="view-subtitle">Manage client quotation requests, volume inquiries, and commercial correspondence.</p>
+            </div>
+            <div class="view-actions">
+              <button id="exportCsvBtn" class="btn-secondary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Export to CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- FILTER BAR -->
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="inquirySearchInput" placeholder="Search by prospect, company, product, or volume...">
+            </div>
+
+            <div class="filter-group">
+              <select id="inquiryTypeFilter" class="portal-select">
+                <option value="all">All Inquiry Types</option>
+                <option value="rfq">Quotation Requests (RFQ)</option>
+                <option value="general">General Messages</option>
+              </select>
+
+              <select id="inquiryStatusFilter" class="portal-select">
+                <option value="all">All Statuses</option>
+                <option value="new">New / Unread</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="quoted">Quotation Issued</option>
+                <option value="contacted">Client Contacted</option>
+                <option value="closed">Closed / Archived</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- INQUIRIES DATA TABLE -->
+          <div class="content-panel">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date & Time</th>
+                    <th>Prospect & Company</th>
+                    <th>Type</th>
+                    <th>Product / Subject</th>
+                    <th>Volume / Port</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inquiriesTableBody">
+                  <tr><td colspan="7" class="table-empty">Loading inquiries...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: PRODUCT CATALOG CMS                 -->
+        <!-- ========================================== -->
+        <section id="tab-products" class="tab-pane">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Products & Indenting Catalog</h1>
+              <p class="view-subtitle">Maintain products featured across Jute, Polymers, Pharma Packaging, and Masterbatch lines.</p>
+            </div>
+            <div class="view-actions">
+              <button id="addProductBtn" class="btn-primary-portal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add New Product</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- CATALOG TABLE -->
+          <div class="content-panel">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Product Title</th>
+                    <th>Category</th>
+                    <th>Division</th>
+                    <th>Quality Badge</th>
+                    <th>Featured</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                  <tr><td colspan="6" class="table-empty">Loading catalog items...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: MARKET INTELLIGENCE CMS             -->
+        <!-- ========================================== -->
+        <section id="tab-news" class="tab-pane">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Market Intelligence & News</h1>
+              <p class="view-subtitle">Publish trade analysis, industry insights, and commodity market updates.</p>
+            </div>
+            <div class="view-actions">
+              <button id="addNewsBtn" class="btn-primary-portal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Create New Article</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="content-panel">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Article Headline</th>
+                    <th>Category</th>
+                    <th>Publish Date</th>
+                    <th>Read Time</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="newsTableBody">
+                  <tr><td colspan="6" class="table-empty">Loading articles...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: SUPABASE & SYSTEM SETTINGS          -->
+        <!-- ========================================== -->
+        <section id="tab-settings" class="tab-pane">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Database & System Configuration</h1>
+              <p class="view-subtitle">Environment configuration, Supabase PostgreSQL schema, and deployment diagnostics.</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <!-- BACKEND DIAGNOSTICS -->
+            <div class="content-panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <h3>Backend Architecture</h3>
+                  <span>Connection diagnostics and Vercel environment variables</span>
+                </div>
+              </div>
+              <div class="settings-body">
+                <div class="config-row">
+                  <span class="config-label">Active Storage Layer:</span>
+                  <span id="settingsStorageMode" class="badge-pill gold">Detecting...</span>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">Supabase Cloud Endpoint:</span>
+                  <span id="settingsSupabaseUrl" class="code-pill">None configured</span>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">Vercel Production Domain:</span>
+                  <span class="code-pill">https://tradeaxis-website.vercel.app</span>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">Admin Master Password:</span>
+                  <span class="code-pill">Configured in Vercel (`ADMIN_PASSWORD`)</span>
+                </div>
+
+                <div class="info-alert">
+                  <strong>💡 How to link live Supabase in Vercel:</strong>
+                  <ol style="margin-top: 8px; padding-left: 20px; line-height: 1.6;">
+                    <li>Open your <strong>Vercel Dashboard &gt; Project Settings &gt; Environment Variables</strong>.</li>
+                    <li>Add <code>ADMIN_PASSWORD</code> = <code>Adminwasif123!</code></li>
+                    <li>Add <code>SUPABASE_URL</code> = <code>https://your-project.supabase.co</code></li>
+                    <li>Add <code>SUPABASE_ANON_KEY</code> = <code>your-supabase-anon-key</code></li>
+                    <li>Click <strong>Redeploy</strong> in Vercel. TradeAxis will instantly stream all inquiries directly into Supabase!</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUPABASE SQL SCHEMA -->
+            <div class="content-panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <h3>Supabase SQL Schema</h3>
+                  <span>Execute in your Supabase SQL Editor to initialize tables</span>
+                </div>
+                <button class="btn-secondary" id="copySchemaBtn">Copy SQL Schema</button>
+              </div>
+              <div class="settings-body">
+                <textarea id="schemaSqlCode" class="sql-preview-box" readonly>
+-- 1. Inquiries & RFQs CRM Table
+create table if not exists inquiries (
+  id text primary key,
+  created_at timestamptz default now(),
+  inquiry_type text default 'rfq',
+  full_name text not null,
+  company_name text,
+  email text,
+  phone text,
+  product_requirement text,
+  volume_port text,
+  subject text,
+  message text,
+  status text default 'new',
+  admin_notes text default '',
+  updated_at timestamptz default now()
+);
+
+-- 2. Products Catalog Table
+create table if not exists products (
+  id text primary key,
+  created_at timestamptz default now(),
+  name text not null,
+  category text not null,
+  division text,
+  badge text,
+  description text,
+  specs text,
+  is_featured boolean default false
+);
+
+-- 3. Market News & Bulletins Table
+create table if not exists news_articles (
+  id text primary key,
+  created_at timestamptz default now(),
+  title text not null,
+  category text default 'Market Trends',
+  publish_date text,
+  read_time text default '3 min read',
+  excerpt text,
+  content text,
+  published boolean default true
+);
+                </textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. MODALS                                  -->
+  <!-- ========================================== -->
+
+  <!-- INQUIRY DETAIL MODAL -->
+  <div id="inquiryDetailModal" class="portal-modal-overlay">
+    <div class="portal-modal-card modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalInquiryName" class="modal-title">Prospect Details</h2>
+          <span id="modalInquiryDate" class="modal-sub">Submitted: Oct 21, 2026</span>
+        </div>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-info-grid">
+          <div class="info-item">
+            <label>Company / Organization</label>
+            <div id="modalInquiryCompany" class="info-val">—</div>
+          </div>
+          <div class="info-item">
+            <label>Email Address</label>
+            <div id="modalInquiryEmail" class="info-val">—</div>
+          </div>
+          <div class="info-item">
+            <label>Phone / WhatsApp</label>
+            <div id="modalInquiryPhone" class="info-val">—</div>
+          </div>
+          <div class="info-item">
+            <label>Inquiry Classification</label>
+            <div id="modalInquiryType" class="info-val">—</div>
+          </div>
+          <div class="info-item full">
+            <label>Product Requirement / Subject</label>
+            <div id="modalInquiryProduct" class="info-val highlight">—</div>
+          </div>
+          <div class="info-item full">
+            <label>Requested Volume & Destination Port</label>
+            <div id="modalInquiryVolume" class="info-val">—</div>
+          </div>
+          <div class="info-item full">
+            <label>Client Message & Technical Specifications</label>
+            <div id="modalInquiryMessage" class="info-box-text">—</div>
+          </div>
+        </div>
+
+        <div class="admin-notes-section">
+          <label for="modalAdminNotes">Internal Trade Desk Notes</label>
+          <textarea id="modalAdminNotes" rows="3" placeholder="Enter quotation numbers, LC discussions, follow-up dates, or internal trade notes..."></textarea>
+        </div>
+
+        <div class="status-selector-row">
+          <label>Update Lead Status:</label>
+          <select id="modalStatusSelect" class="portal-select">
+            <option value="new">New / Unread</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="quoted">Quotation Issued</option>
+            <option value="contacted">Client Contacted</option>
+            <option value="closed">Closed / Archived</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-danger" id="deleteInquiryModalBtn">Delete Lead</button>
+        <div class="footer-right">
+          <button class="btn-secondary" data-close-modal>Cancel</button>
+          <button class="btn-primary-portal" id="saveInquiryModalBtn">Save Notes & Status</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div id="productModal" class="portal-modal-overlay">
+    <div class="portal-modal-card">
+      <div class="modal-header">
+        <h2 id="productModalTitle" class="modal-title">Add Catalog Product</h2>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+
+      <form id="productForm">
+        <input type="hidden" id="prodFormId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="prodFormName">Product Name *</label>
+            <input type="text" id="prodFormName" required placeholder="e.g. Prime Virgin HDPE Film Resin">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodFormCategory">Category *</label>
+              <select id="prodFormCategory" class="portal-select">
+                <option value="jute">Jute Products</option>
+                <option value="polymers">Polymers & Resins</option>
+                <option value="pharma">Pharmaceutical Packaging</option>
+                <option value="masterbatch">Masterbatch</option>
+                <option value="machinery">Machinery & Sourcing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prodFormBadge">Quality Badge</label>
+              <input type="text" id="prodFormBadge" placeholder="e.g. 100% Eco-Friendly">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="prodFormDivision">Business Division</label>
+            <input type="text" id="prodFormDivision" placeholder="e.g. Export Division (Jute Products)">
+          </div>
+
+          <div class="form-group">
+            <label for="prodFormDesc">Product Description</label>
+            <textarea id="prodFormDesc" rows="3" placeholder="Commercial overview, origin, and industrial applications..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prodFormSpecs">Technical Specifications (Bullet points)</label>
+            <textarea id="prodFormSpecs" rows="3" placeholder="• Grade: Film Extrusion&#10;• MFI: 0.05-0.12&#10;• Packing: 25kg Bags"></textarea>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="prodFormFeatured">
+            <label for="prodFormFeatured">Display as Featured Product on Homepage</label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn-primary-portal">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT NEWS MODAL -->
+  <div id="newsModal" class="portal-modal-overlay">
+    <div class="portal-modal-card">
+      <div class="modal-header">
+        <h2 id="newsModalTitle" class="modal-title">Publish Market Bulletin</h2>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+
+      <form id="newsForm">
+        <input type="hidden" id="newsFormId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newsFormTitle">Article Headline *</label>
+            <input type="text" id="newsFormTitle" required placeholder="e.g. Jute Demand Expands in EU Packaging Sector">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newsFormCategory">Category</label>
+              <input type="text" id="newsFormCategory" placeholder="e.g. Market Trends">
+            </div>
+            <div class="form-group">
+              <label for="newsFormReadTime">Read Time</label>
+              <input type="text" id="newsFormReadTime" placeholder="e.g. 4 min read">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="newsFormExcerpt">Executive Excerpt (Preview text)</label>
+            <textarea id="newsFormExcerpt" rows="2" placeholder="Brief summary displayed on cards..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="newsFormContent">Full Content</label>
+            <textarea id="newsFormContent" rows="6" placeholder="Full market report, analysis, and trade bullet points..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn-primary-portal">Publish Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="portalToast" class="portal-toast"></div>
+
+  <!-- ADMIN CLIENT SCRIPT -->
+  <script src="admin.js"></script>
+</body>
+</html>

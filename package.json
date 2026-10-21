@@ -2,11 +2,12 @@
   "name": "tradeaxis-website",
   "version": "1.0.0",
   "description": "TradeAxis Global Ventures Corporate Website",
+  "type": "module",
   "scripts": {
-    "start": "npx serve . -l 3000",
-    "dev": "npx serve . -l 3000",
-    "serve": "npx serve . -l 3000",
-    "build": "echo \"Build complete - static site ready for deployment\""
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve": "node server.js",
+    "build": "echo \"Build complete - static site and serverless API ready for deployment\""
   },
   "keywords": [
     "tradeaxis",
