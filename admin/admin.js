@@ -370,7 +370,7 @@ function renderInquiriesTable() {
         <div style="font-size:0.75rem; color:var(--text-muted);">${formatTime(item.created_at)}</div>
       </td>
       <td>
-        <div style="font-weight:600; color:#FFFFFF;">${escapeHtml(item.full_name || 'Anonymous')}</div>
+        <div style="font-weight:600; color:var(--text-primary);">${escapeHtml(item.full_name || 'Anonymous')}</div>
         <div style="font-size:0.8rem; color:var(--text-secondary);">${escapeHtml(item.company_name || 'Undisclosed Entity')}</div>
         <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(item.email || '')} ${item.phone ? '• ' + escapeHtml(item.phone) : ''}</div>
       </td>
@@ -414,7 +414,7 @@ function renderProductsTable() {
   tbody.innerHTML = STATE.products.map(item => `
     <tr>
       <td>
-        <strong style="color:#FFF;">${escapeHtml(item.name)}</strong>
+        <strong style="color:var(--text-primary);">${escapeHtml(item.name)}</strong>
         <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(item.specs || item.description || '').slice(0, 70)}...</div>
       </td>
       <td><span class="badge-pill">${escapeHtml(item.category || 'general')}</span></td>
@@ -447,7 +447,7 @@ function renderNewsTable() {
   tbody.innerHTML = STATE.news.map(item => `
     <tr>
       <td>
-        <strong style="color:#FFF;">${escapeHtml(item.title)}</strong>
+        <strong style="color:var(--text-primary);">${escapeHtml(item.title)}</strong>
         <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(item.excerpt || '').slice(0, 80)}...</div>
       </td>
       <td><span class="badge-pill">${escapeHtml(item.category || 'Market Trends')}</span></td>
