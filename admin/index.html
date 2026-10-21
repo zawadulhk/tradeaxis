@@ -107,7 +107,7 @@
 
           <button class="nav-tab-btn" data-tab="inquiries">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span>Inquiries & RFQs</span>
+            <span>Enquiries</span>
             <span id="unreadCountBadge" class="tab-counter">0</span>
           </button>
 
@@ -118,7 +118,7 @@
 
           <button class="nav-tab-btn" data-tab="news">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-            <span>Market News</span>
+            <span>News</span>
           </button>
 
           <button class="nav-tab-btn" data-tab="settings">
@@ -164,7 +164,7 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               </div>
               <div class="metric-body">
-                <div class="metric-label">Total Leads & RFQs</div>
+                <div class="metric-label">Total Enquiries</div>
                 <div id="statTotalInquiries" class="metric-value">0</div>
                 <div class="metric-footnote">Captured across all pages</div>
               </div>
@@ -175,7 +175,7 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               </div>
               <div class="metric-body">
-                <div class="metric-label">Pending / New Quotes</div>
+                <div class="metric-label">New Enquiries</div>
                 <div id="statPendingInquiries" class="metric-value">0</div>
                 <div class="metric-footnote">Require trade desk review</div>
               </div>
@@ -197,9 +197,9 @@
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
               </div>
               <div class="metric-body">
-                <div class="metric-label">Market Intelligence</div>
+                <div class="metric-label">News Articles</div>
                 <div id="statTotalNews" class="metric-value">0</div>
-                <div class="metric-footnote">Published trade bulletins</div>
+                <div class="metric-footnote">Published announcements</div>
               </div>
             </div>
           </div>
@@ -208,25 +208,24 @@
           <div class="content-panel">
             <div class="panel-header">
               <div class="panel-title">
-                <h3>Latest Commercial Inquiries</h3>
-                <span>Recent quotations submitted via corporate website</span>
+                <h3>Latest Commercial Enquiries</h3>
+                <span>Recent trade inquiries submitted via corporate website</span>
               </div>
-              <button class="btn-text-gold" onclick="switchTab('inquiries')">View All Inquiries →</button>
+              <button class="btn-text-gold" onclick="switchTab('inquiries')">View All Enquiries →</button>
             </div>
             <div class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Prospect</th>
-                    <th>Type</th>
-                    <th>Product / Requirement</th>
+                    <th>Prospect & Company</th>
+                    <th>Requirement</th>
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody id="overviewRecentTableBody">
-                  <tr><td colspan="6" class="table-empty">Loading records...</td></tr>
+                  <tr><td colspan="5" class="table-empty">Loading records...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -239,8 +238,8 @@
         <section id="tab-inquiries" class="tab-pane">
           <div class="view-header">
             <div>
-              <h1 class="view-title">Commercial Inquiries & RFQs</h1>
-              <p class="view-subtitle">Manage client quotation requests, volume inquiries, and commercial correspondence.</p>
+              <h1 class="view-title">Commercial Enquiries</h1>
+              <p class="view-subtitle">Manage client trade enquiries, sourcing requests, and commercial correspondence.</p>
             </div>
             <div class="view-actions">
               <button id="exportCsvBtn" class="btn-secondary">
@@ -258,12 +257,6 @@
             </div>
 
             <div class="filter-group">
-              <select id="inquiryTypeFilter" class="portal-select">
-                <option value="all">All Inquiry Types</option>
-                <option value="rfq">Quotation Requests (RFQ)</option>
-                <option value="general">General Messages</option>
-              </select>
-
               <select id="inquiryStatusFilter" class="portal-select">
                 <option value="all">All Statuses</option>
                 <option value="new">New / Unread</option>
@@ -283,15 +276,14 @@
                   <tr>
                     <th>Date & Time</th>
                     <th>Prospect & Company</th>
-                    <th>Type</th>
-                    <th>Product / Subject</th>
+                    <th>Product / Requirement</th>
                     <th>Volume / Port</th>
                     <th>Status</th>
                     <th style="text-align: right;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="inquiriesTableBody">
-                  <tr><td colspan="7" class="table-empty">Loading inquiries...</td></tr>
+                  <tr><td colspan="6" class="table-empty">Loading enquiries...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -338,13 +330,13 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- TAB 4: MARKET INTELLIGENCE CMS             -->
+        <!-- TAB 4: NEWS ARTICLES CMS                -->
         <!-- ========================================== -->
         <section id="tab-news" class="tab-pane">
           <div class="view-header">
             <div>
-              <h1 class="view-title">Market Intelligence & News</h1>
-              <p class="view-subtitle">Publish trade analysis, industry insights, and commodity market updates.</p>
+              <h1 class="view-title">News Articles</h1>
+              <p class="view-subtitle">Publish company announcements, trade updates, and press releases.</p>
             </div>
             <div class="view-actions">
               <button id="addNewsBtn" class="btn-primary-portal">
@@ -630,9 +622,9 @@ create table if not exists news_articles (
 
   <!-- ADD / EDIT NEWS MODAL -->
   <div id="newsModal" class="portal-modal-overlay">
-    <div class="portal-modal-card">
+    <div class="portal-modal-card" style="max-width: 680px;">
       <div class="modal-header">
-        <h2 id="newsModalTitle" class="modal-title">Publish Market Bulletin</h2>
+        <h2 id="newsModalTitle" class="modal-title">Publish News Article</h2>
         <button class="modal-close-btn" data-close-modal>&times;</button>
       </div>
 
@@ -641,28 +633,47 @@ create table if not exists news_articles (
         <div class="modal-body">
           <div class="form-group">
             <label for="newsFormTitle">Article Headline *</label>
-            <input type="text" id="newsFormTitle" required placeholder="e.g. Jute Demand Expands in EU Packaging Sector">
+            <input type="text" id="newsFormTitle" required placeholder="e.g. TradeAxis Expands Direct Petrochemical Sourcing Network">
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="newsFormCategory">Category</label>
-              <input type="text" id="newsFormCategory" placeholder="e.g. Market Trends">
+              <input type="text" id="newsFormCategory" placeholder="e.g. Corporate News">
             </div>
             <div class="form-group">
               <label for="newsFormReadTime">Read Time</label>
-              <input type="text" id="newsFormReadTime" placeholder="e.g. 4 min read">
+              <input type="text" id="newsFormReadTime" placeholder="e.g. 3 min read">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="newsFormExcerpt">Executive Excerpt (Preview text)</label>
-            <textarea id="newsFormExcerpt" rows="2" placeholder="Brief summary displayed on cards..."></textarea>
+            <label for="newsFormExcerpt">Summary / Excerpt (Preview text)</label>
+            <textarea id="newsFormExcerpt" rows="2" placeholder="Brief 1-2 sentence summary displayed on cards..."></textarea>
           </div>
 
           <div class="form-group">
-            <label for="newsFormContent">Full Content</label>
-            <textarea id="newsFormContent" rows="6" placeholder="Full market report, analysis, and trade bullet points..."></textarea>
+            <label>Article Content (Rich Text Editor) *</label>
+            <div class="rte-container">
+              <div class="rte-toolbar" id="newsRteToolbar">
+                <button type="button" class="rte-btn" data-cmd="bold" title="Bold"><b>B</b></button>
+                <button type="button" class="rte-btn" data-cmd="italic" title="Italic"><i>I</i></button>
+                <button type="button" class="rte-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+                <div class="rte-sep"></div>
+                <button type="button" class="rte-btn" data-cmd="formatBlock" data-val="h2" title="Heading 2">H2</button>
+                <button type="button" class="rte-btn" data-cmd="formatBlock" data-val="h3" title="Heading 3">H3</button>
+                <button type="button" class="rte-btn" data-cmd="formatBlock" data-val="p" title="Paragraph">¶</button>
+                <div class="rte-sep"></div>
+                <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Bullet List">• List</button>
+                <button type="button" class="rte-btn" data-cmd="insertOrderedList" title="Numbered List">1. List</button>
+                <button type="button" class="rte-btn" data-cmd="formatBlock" data-val="blockquote" title="Quote">“ ”</button>
+                <div class="rte-sep"></div>
+                <button type="button" class="rte-btn" data-cmd="createLink" title="Insert Link">🔗 Link</button>
+                <button type="button" class="rte-btn" data-cmd="removeFormat" title="Clear Formatting">✕</button>
+              </div>
+              <div id="newsFormEditor" class="rte-editor-surface" contenteditable="true" placeholder="Write or paste your article content here with formatting..."></div>
+              <textarea id="newsFormContent" style="display: none;"></textarea>
+            </div>
           </div>
         </div>
 

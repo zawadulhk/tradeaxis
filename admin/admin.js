@@ -334,7 +334,7 @@ function renderOverview() {
   if (!tbody) return;
 
   if (recent.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No commercial inquiries recorded yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="table-empty">No commercial enquiries recorded yet.</td></tr>';
     return;
   }
 
@@ -345,8 +345,7 @@ function renderOverview() {
         <strong>${escapeHtml(item.full_name || 'Prospect')}</strong>
         <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(item.company_name || 'Individual')}</div>
       </td>
-      <td><span class="badge-type ${item.inquiry_type === 'rfq' ? 'rfq' : 'general'}">${item.inquiry_type === 'rfq' ? 'RFQ' : 'General'}</span></td>
-      <td>${escapeHtml(item.product_requirement || item.subject || 'General Inquiry')}</td>
+      <td>${escapeHtml(item.product_requirement || item.subject || 'Trade Enquiry')}</td>
       <td><span class="badge-status ${item.status || 'new'}">${formatStatus(item.status)}</span></td>
       <td>
         <button class="btn-text-gold" onclick="viewInquiryDetail('${item.id}')">View Details →</button>
@@ -359,12 +358,10 @@ function renderInquiriesTable() {
   const tbody = document.getElementById('inquiriesTableBody');
   if (!tbody) return;
 
-  const typeFilter = document.getElementById('inquiryTypeFilter')?.value || 'all';
   const statusFilter = document.getElementById('inquiryStatusFilter')?.value || 'all';
   const search = (document.getElementById('inquirySearchInput')?.value || '').toLowerCase().trim();
 
   const filtered = STATE.inquiries.filter(item => {
-    if (typeFilter !== 'all' && item.inquiry_type !== typeFilter) return false;
     if (statusFilter !== 'all' && item.status !== statusFilter) return false;
     if (search) {
       const hay = [
@@ -383,7 +380,7 @@ function renderInquiriesTable() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">No inquiries match the current filter criteria.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No enquiries match the current filter criteria.</td></tr>';
     return;
   }
 
@@ -399,12 +396,7 @@ function renderInquiriesTable() {
         <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(item.email || '')} ${item.phone ? '• ' + escapeHtml(item.phone) : ''}</div>
       </td>
       <td>
-        <span class="badge-type ${item.inquiry_type === 'rfq' ? 'rfq' : 'general'}">
-          ${item.inquiry_type === 'rfq' ? 'RFQ' : 'General'}
-        </span>
-      </td>
-      <td>
-        <div style="font-weight:500;">${escapeHtml(item.product_requirement || item.subject || 'Inquiry')}</div>
+        <div style="font-weight:500;">${escapeHtml(item.product_requirement || item.subject || 'Enquiry')}</div>
       </td>
       <td>
         <div>${escapeHtml(item.volume_port || '—')}</div>
@@ -611,9 +603,12 @@ window.deleteProductRecord = async function(id) {
 // 8. NEWS MODAL & CMS ACTIONS
 // ==========================================================================
 window.openAddNewsModal = function() {
-  document.getElementById('newsModalTitle').textContent = 'Publish Market Bulletin';
+  document.getElementById('newsModalTitle').textContent = 'Publish News Article';
   document.getElementById('newsFormId').value = '';
   document.getElementById('newsForm').reset();
+  const editor = document.getElementById('newsFormEditor');
+  if (editor) editor.innerHTML = '';
+  document.getElementById('newsFormContent').value = '';
   openModal('newsModal');
 };
 
@@ -621,12 +616,17 @@ window.openEditNewsModal = function(id) {
   const item = STATE.news.find(x => x.id === id);
   if (!item) return;
 
-  document.getElementById('newsModalTitle').textContent = 'Edit Market Bulletin';
+  document.getElementById('newsModalTitle').textContent = 'Edit News Article';
   document.getElementById('newsFormId').value = item.id;
   document.getElementById('newsFormTitle').value = item.title || '';
-  document.getElementById('newsFormCategory').value = item.category || '';
-  document.getElementById('newsFormReadTime').value = item.read_time || '';
+  document.getElementById('newsFormCategory').value = item.category || 'Company News';
+  document.getElementById('newsFormReadTime').value = item.read_time || '3 min read';
   document.getElementById('newsFormExcerpt').value = item.excerpt || '';
+  
+  const editor = document.getElementById('newsFormEditor');
+  if (editor) {
+    editor.innerHTML = item.content || '';
+  }
   document.getElementById('newsFormContent').value = item.content || '';
 
   openModal('newsModal');
@@ -646,10 +646,50 @@ window.deleteNewsRecord = async function(id) {
   }
 };
 
+function initRte() {
+  const toolbar = document.getElementById('newsRteToolbar');
+  const editor = document.getElementById('newsFormEditor');
+  if (!toolbar || !editor) return;
+
+  toolbar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.rte-btn');
+    if (!btn) return;
+    e.preventDefault();
+    editor.focus();
+
+    const cmd = btn.getAttribute('data-cmd');
+    const val = btn.getAttribute('data-val');
+
+    if (cmd === 'createLink') {
+      const url = prompt('Enter URL (e.g. https://example.com):', 'https://');
+      if (url && url !== 'https://') {
+        document.execCommand(cmd, false, url);
+      }
+    } else if (cmd === 'formatBlock') {
+      document.execCommand(cmd, false, val);
+    } else {
+      document.execCommand(cmd, false, null);
+    }
+    syncEditor();
+  });
+
+  editor.addEventListener('input', syncEditor);
+  editor.addEventListener('blur', syncEditor);
+
+  function syncEditor() {
+    const hidden = document.getElementById('newsFormContent');
+    if (hidden && editor) {
+      hidden.value = editor.innerHTML;
+    }
+  }
+}
+
 // ==========================================================================
 // 9. FORMS & CSV EXPORT
 // ==========================================================================
 function initForms() {
+  initRte();
+
   // Detail modal save
   document.getElementById('saveInquiryModalBtn')?.addEventListener('click', saveInquiryChanges);
   document.getElementById('deleteInquiryModalBtn')?.addEventListener('click', () => {
@@ -693,13 +733,16 @@ function initForms() {
   document.getElementById('newsForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('newsFormId').value;
+    const editor = document.getElementById('newsFormEditor');
+    const content = editor ? editor.innerHTML.trim() : document.getElementById('newsFormContent').value.trim();
+
     const payload = {
       id: id || undefined,
       title: document.getElementById('newsFormTitle').value.trim(),
-      category: document.getElementById('newsFormCategory').value.trim(),
-      read_time: document.getElementById('newsFormReadTime').value.trim(),
+      category: document.getElementById('newsFormCategory').value.trim() || 'Company News',
+      read_time: document.getElementById('newsFormReadTime').value.trim() || '3 min read',
       excerpt: document.getElementById('newsFormExcerpt').value.trim(),
-      content: document.getElementById('newsFormContent').value.trim()
+      content: content
     };
 
     try {

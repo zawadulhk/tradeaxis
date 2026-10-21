@@ -62,57 +62,20 @@ function initMobileNav() {
   });
 }
 
-/* --- Unified Form Controller & Field Toggler --- */
-function updateFormFields(form, type) {
-  if (!form) return;
-  const rfqFields = form.querySelector('.rfq-fields');
-  const generalFields = form.querySelector('.general-fields');
-  const submitBtn = form.querySelector('.submit-inquiry-btn') || form.querySelector('button[type="submit"]');
-  const productSelect = form.querySelector('.rfq-product-select');
-  const generalSubject = form.querySelector('.general-subject-input');
-  const messageArea = form.querySelector('textarea[name="message"]');
-
-  if (type === 'rfq') {
-    if (rfqFields) rfqFields.style.display = 'block';
-    if (generalFields) generalFields.style.display = 'none';
-    if (productSelect) productSelect.required = true;
-    if (generalSubject) generalSubject.required = false;
-    if (submitBtn) submitBtn.textContent = 'Submit Request for Quotation';
-    if (messageArea) {
-      messageArea.placeholder = 'Specify grade, technical specifications, volume, delivery schedules, or message details...';
-    }
-  } else {
-    if (rfqFields) rfqFields.style.display = 'none';
-    if (generalFields) generalFields.style.display = 'block';
-    if (productSelect) productSelect.required = false;
-    if (generalSubject) generalSubject.required = true;
-    if (submitBtn) submitBtn.textContent = 'Transmit Message to Trade Desk';
-    if (messageArea) {
-      messageArea.placeholder = 'Provide details regarding your inquiry, partnership interest, or questions...';
-    }
-  }
-}
-
 /* --- Inquiry / RFQ Modal --- */
-/* --- Inquiry / RFQ Modal (Event Delegation) --- */
+/* --- Unified Enquiry Modal (Event Delegation) --- */
 function initRfqModal() {
   const modal = document.getElementById('rfqModal');
   if (!modal || modal._delegationBound) return;
   modal._delegationBound = true;
 
-  const form = modal.querySelector('form');
-  const typeSelect = modal.querySelector('.inquiry-type-select');
   const productInput = modal.querySelector('.rfq-product-select') || document.getElementById('rfqProductSelect');
 
   document.addEventListener('click', (e) => {
-    // Open RFQ button
-    const openBtn = e.target.closest('[data-open-rfq]');
+    // Open Enquiry modal button
+    const openBtn = e.target.closest('[data-open-rfq], [data-open-contact], [data-open-enquiry]');
     if (openBtn) {
       e.preventDefault();
-      if (typeSelect) {
-        typeSelect.value = 'rfq';
-        updateFormFields(form, 'rfq');
-      }
       const preselect = openBtn.getAttribute('data-product') || '';
       if (productInput && preselect) {
         if (productInput.tagName === 'SELECT') {
@@ -123,19 +86,6 @@ function initRfqModal() {
           }
         }
         productInput.value = preselect;
-      }
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-      return;
-    }
-
-    // Open General Contact button
-    const contactBtn = e.target.closest('[data-open-contact]');
-    if (contactBtn) {
-      e.preventDefault();
-      if (typeSelect) {
-        typeSelect.value = 'general';
-        updateFormFields(form, 'general');
       }
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -198,6 +148,18 @@ function initProductFilter() {
 }
 
 /* --- Dynamic News & Insights Hydration --- */
+function formatArticleContent(raw) {
+  if (!raw) return '';
+  if (/<[a-z][\s\S]*>/i.test(raw)) {
+    return raw;
+  }
+  return raw
+    .split(/\n+/)
+    .filter(Boolean)
+    .map(p => `<p>${escapeHtml(p)}</p>`)
+    .join('');
+}
+
 async function initDynamicNews() {
   const newsGrid = document.getElementById('newsGrid');
   const homeNewsGrid = document.getElementById('homeNewsGrid');
@@ -221,17 +183,13 @@ async function initDynamicNews() {
         const excerptHtml = item.excerpt 
           ? `<p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">${escapeHtml(item.excerpt)}</p>` 
           : '';
-        const bodyParagraphs = (item.content || '')
-          .split(/\n+/)
-          .filter(Boolean)
-          .map(p => `<p>${escapeHtml(p)}</p>`)
-          .join('');
+        const bodyContent = formatArticleContent(item.content);
 
         return `
           <article class="division-card" id="article-${item.id || idx}" style="opacity: 1; transform: translateY(0);">
             <div class="card-thumb">
               <img src="${imgSrc}" alt="${escapeHtml(item.title)}">
-              <span class="badge-tag">${escapeHtml(item.category || 'Industry Insights')}</span>
+              <span class="badge-tag">${escapeHtml(item.category || 'News')}</span>
             </div>
             <div class="card-body">
               <div style="font-size: 0.8rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.35rem;">
@@ -239,9 +197,9 @@ async function initDynamicNews() {
               </div>
               <h3>${escapeHtml(item.title)}</h3>
               ${excerptHtml}
-              ${bodyParagraphs}
+              ${bodyContent}
               <div style="margin-top: auto; padding-top: 1rem;">
-                <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="${escapeHtml(item.title)}">Inquire Regarding This Report</button>
+                <button class="btn btn-outline-gold btn-sm" data-open-enquiry data-product="${escapeHtml(item.title)}">Enquire Now</button>
               </div>
             </div>
           </article>
@@ -254,13 +212,14 @@ async function initDynamicNews() {
       const top3 = published.slice(0, 3);
       homeNewsGrid.innerHTML = top3.map((item, idx) => {
         const imgSrc = item.image_url || getCategoryThumb(item.category);
-        const summary = item.excerpt || (item.content ? item.content.slice(0, 140) + '...' : '');
+        const cleanContent = (item.content || '').replace(/<[^>]*>/g, '');
+        const summary = item.excerpt || (cleanContent ? cleanContent.slice(0, 140) + '...' : '');
 
         return `
           <div class="division-card" style="opacity: 1; transform: translateY(0);">
             <div class="card-thumb" style="height: 180px;">
               <img src="${imgSrc}" alt="${escapeHtml(item.title)}">
-              <span class="badge-tag">${escapeHtml(item.category || 'Industry Updates')}</span>
+              <span class="badge-tag">${escapeHtml(item.category || 'News')}</span>
             </div>
             <div class="card-body">
               <div style="font-size: 0.75rem; color: var(--primary); font-weight: 700; margin-bottom: 0.25rem;">
@@ -288,8 +247,19 @@ async function initDynamicProducts() {
     const res = await fetch('/api/products');
     if (!res.ok) return;
     const data = await res.json();
-    const products = data.products || [];
-    if (!Array.isArray(products) || products.length === 0) return;
+    const products = data.products;
+    if (!Array.isArray(products)) return;
+
+    if (products.length === 0) {
+      productGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4.5rem 1.5rem; color: var(--text-muted);">
+          <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📦</div>
+          <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.35rem;">No Products Listed</h3>
+          <p style="font-size: 0.92rem; max-width: 500px; margin: 0 auto;">No products are currently in the catalog. Products published from the Admin Portal will appear here.</p>
+        </div>
+      `;
+      return;
+    }
 
     productGrid.innerHTML = products.map(item => {
       const imgSrc = item.image_url || getCategoryThumb(item.category);
@@ -318,7 +288,7 @@ async function initDynamicProducts() {
             <p>${escapeHtml(item.description || '')}</p>
             ${tagsHtml}
             <div style="margin-top: auto; padding-top: 1rem;">
-              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="${escapeHtml(item.name)}">Request Specifications</button>
+              <button class="btn btn-outline-gold btn-sm" data-open-enquiry data-product="${escapeHtml(item.name)}">Enquire Now</button>
             </div>
           </div>
         </div>
@@ -371,27 +341,15 @@ function escapeHtml(str) {
 
 /* --- Form Submissions & Toast Notifications --- */
 function initForms() {
-  // Initialize dynamic field toggling on all inquiry forms
-  document.querySelectorAll('.inquiry-type-select').forEach(select => {
-    const form = select.closest('form');
-    select.addEventListener('change', () => {
-      updateFormFields(form, select.value);
-    });
-    // Set initial display based on selected value
-    updateFormFields(form, select.value);
-  });
-
   const forms = document.querySelectorAll('form[data-ajax-form]');
   forms.forEach(form => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn ? submitBtn.innerHTML : 'Submit';
-      const typeSelect = form.querySelector('.inquiry-type-select');
-      const inquiryType = typeSelect ? typeSelect.value : 'rfq';
 
       const payload = {
-        inquiry_type: inquiryType,
+        inquiry_type: 'enquiry',
         full_name: form.querySelector('[name="full_name"]')?.value?.trim() || '',
         company_name: form.querySelector('[name="company_name"]')?.value?.trim() || '',
         email: form.querySelector('[name="email"]')?.value?.trim() || '',
@@ -416,7 +374,7 @@ function initForms() {
 
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
-          console.error('Inquiry submission error:', errData);
+          console.error('Enquiry submission error:', errData);
           showToast(errData.details || errData.error || 'Submission error. Please email us directly.');
           return;
         }
@@ -436,15 +394,8 @@ function initForms() {
         document.body.style.overflow = '';
       }
 
-      const successMsg = inquiryType === 'rfq'
-        ? 'Thank you! Your quotation request has been transmitted to our trade desk. Our representative will contact you within 24 hours.'
-        : 'Thank you! Your message has been transmitted to TradeAxis. We will respond to your inquiry shortly.';
-
-      showToast(successMsg);
+      showToast('Thank you! Your enquiry has been received. Our commercial desk will contact you promptly.');
       form.reset();
-      if (typeSelect) {
-        updateFormFields(form, typeSelect.value);
-      }
     });
   });
 }

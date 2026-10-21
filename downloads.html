@@ -72,7 +72,7 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="btn btn-primary btn-sm" data-open-rfq>Request a Quote</button>
+        <button class="btn btn-primary btn-sm" data-open-rfq>Enquiry</button>
         <button class="mobile-toggle" aria-label="Toggle navigation menu">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
@@ -247,25 +247,19 @@
     </div>
   </footer>
 
-  <!-- Unified Modal -->
+  <!-- Unified Enquiry Modal -->
   <div class="modal-overlay" id="rfqModal">
     <div class="modal-container">
       <div class="modal-header">
-        <h3>Inquire or Request a Quote</h3>
+        <h3>Submit an Enquiry</h3>
         <button class="modal-close" data-close-rfq aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body">
         <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-          Select your inquiry type below. Our trade desk will evaluate your requirements and respond promptly.
+          Connect directly with our commercial trading desk. Provide your requirements below and we will respond promptly.
         </p>
         <form data-ajax-form class="unified-form">
-          <div class="form-group">
-            <label class="form-label">Inquiry Purpose / Type *</label>
-            <select class="form-control inquiry-type-select" name="inquiry_type" required>
-              <option value="rfq">Request for Quotation (RFQ) / Commercial Sourcing</option>
-              <option value="general">General Inquiry / Contact Desk</option>
-            </select>
-          </div>
+          <input type="hidden" name="inquiry_type" value="enquiry">
 
           <div class="form-grid-2">
             <div class="form-group">
@@ -289,44 +283,33 @@
             </div>
           </div>
 
-          <!-- Dynamic RFQ Fields -->
-          <div class="rfq-fields">
-            <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label">Product / Commodity Requirement *</label>
-                <select class="form-control rfq-product-select" name="product_requirement">
-                  <option value="">Select a Product Category</option>
-                  <option value="Sustainable Jute Products">Sustainable Jute Products (Export)</option>
-                  <option value="Plastic Raw Materials">Plastic Raw Materials & Resins</option>
-                  <option value="Masterbatch Solutions">Masterbatch Solutions (Color/Additive)</option>
-                  <option value="Packaging Materials">BOPP & Packaging Substrates</option>
-                  <option value="Pharmaceutical Packaging">Pharmaceutical Packaging & Blister Foils</option>
-                  <option value="Food Ingredients">Food & Ice Cream Ingredients</option>
-                  <option value="Industrial Machinery">Industrial Machinery Sourcing</option>
-                  <option value="Other Sourcing">Other Customized Sourcing</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Estimated Volume / Target Port / Incoterms</label>
-                <input type="text" class="form-control" name="volume_port" placeholder="e.g. 2x 40ft FCL / FOB Chittagong or CIF">
-              </div>
-            </div>
-          </div>
-
-          <!-- Dynamic General Contact Fields -->
-          <div class="general-fields" style="display: none;">
+          <div class="form-grid-2">
             <div class="form-group">
-              <label class="form-label">Subject *</label>
-              <input type="text" class="form-control general-subject-input" name="subject" placeholder="e.g., Corporate Partnership, Media, General Question">
+              <label class="form-label">Product / Commodity Requirement</label>
+              <select class="form-control rfq-product-select" name="product_requirement" id="rfqProductSelect">
+                <option value="">General Trade Enquiry</option>
+                <option value="Sustainable Jute Products">Sustainable Jute Products (Export)</option>
+                <option value="Plastic Raw Materials">Plastic Raw Materials & Resins</option>
+                <option value="Masterbatch Solutions">Masterbatch Solutions</option>
+                <option value="Packaging Materials">BOPP & Packaging Substrates</option>
+                <option value="Pharmaceutical Packaging">Pharmaceutical Packaging & Blister Foils</option>
+                <option value="Food Ingredients">Food & Ice Cream Ingredients</option>
+                <option value="Industrial Machinery">Industrial Machinery Sourcing</option>
+                <option value="Other Sourcing">Other Customized Sourcing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated Volume / Target Port</label>
+              <input type="text" class="form-control" name="volume_port" placeholder="e.g. 2x 40ft FCL / Chittagong Port">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label message-label">Detailed Requirements / Message *</label>
-            <textarea class="form-control" name="message" rows="4" required placeholder="Specify grade, technical specifications, volume, delivery schedules, or message details..."></textarea>
+            <label class="form-label">Enquiry Details *</label>
+            <textarea class="form-control" name="message" rows="4" required placeholder="Provide specifications, volume, delivery schedules, or message details..."></textarea>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg submit-inquiry-btn" style="width: 100%;">Submit Request for Quotation</button>
+          <button type="submit" class="btn btn-primary btn-lg submit-inquiry-btn" style="width: 100%;">Submit Enquiry</button>
         </form>
       </div>
     </div>

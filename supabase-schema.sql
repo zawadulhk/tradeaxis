@@ -3,11 +3,11 @@
 -- Run this complete script in Supabase: SQL Editor -> New Query -> Run
 -- ============================================================================
 
--- 1. COMMERCIAL INQUIRIES & RFQs CRM TABLE
+-- 1. COMMERCIAL INQUIRIES CRM TABLE
 create table if not exists public.inquiries (
   id text primary key,
   created_at timestamptz not null default now(),
-  inquiry_type text not null default 'rfq',
+  inquiry_type text not null default 'enquiry',
   full_name text not null,
   company_name text,
   email text,
@@ -40,7 +40,8 @@ begin
 end $$;
 
 -- Ensure all columns exist even if table was created previously
-alter table public.inquiries add column if not exists inquiry_type text default 'rfq';
+alter table public.inquiries add column if not exists inquiry_type text default 'enquiry';
+alter table public.inquiries alter column inquiry_type set default 'enquiry';
 alter table public.inquiries add column if not exists company_name text;
 alter table public.inquiries add column if not exists phone text;
 alter table public.inquiries add column if not exists product_requirement text;

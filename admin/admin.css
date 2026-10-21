@@ -1235,3 +1235,118 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   9. RICH TEXT EDITOR FOR NEWS ARTICLES
+   ========================================================================== */
+.rte-container {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #FFFFFF;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rte-container:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-light);
+}
+
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: #F8FAFC;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.rte-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.rte-btn:hover {
+  background: var(--gold-light);
+  color: var(--gold-dark);
+  border-color: var(--gold);
+}
+
+.rte-btn:active {
+  transform: scale(0.96);
+}
+
+.rte-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border-subtle);
+  margin: 0 4px;
+}
+
+.rte-editor-surface {
+  min-height: 180px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: #FFFFFF;
+  outline: none;
+}
+
+.rte-editor-surface[placeholder]:empty:before {
+  content: attr(placeholder);
+  color: var(--text-muted);
+  cursor: text;
+}
+
+.rte-editor-surface h2 {
+  font-size: 1.3rem;
+  margin: 0.8rem 0 0.4rem;
+  color: var(--text-primary);
+}
+
+.rte-editor-surface h3 {
+  font-size: 1.1rem;
+  margin: 0.6rem 0 0.3rem;
+  color: var(--text-primary);
+}
+
+.rte-editor-surface p {
+  margin-bottom: 0.65rem;
+}
+
+.rte-editor-surface ul, .rte-editor-surface ol {
+  padding-left: 1.4rem;
+  margin-bottom: 0.65rem;
+}
+
+.rte-editor-surface blockquote {
+  border-left: 3px solid var(--gold);
+  padding-left: 12px;
+  margin: 0.75rem 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.rte-editor-surface a {
+  color: var(--gold-dark);
+  text-decoration: underline;
+}
