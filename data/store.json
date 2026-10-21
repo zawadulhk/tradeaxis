@@ -1,0 +1,129 @@
+{
+  "inquiries": [
+    {
+      "id": "inq-101",
+      "created_at": "2026-10-21T12:17:51.676Z",
+      "inquiry_type": "rfq",
+      "full_name": "David Vance",
+      "company_name": "Vance Polymer Extrusions GmbH",
+      "email": "d.vance@vance-extrusions.de",
+      "phone": "+49 171 8923412",
+      "product_requirement": "Plastic Raw Materials (HDPE)",
+      "volume_port": "4x 40ft FCL / CIF Hamburg",
+      "subject": null,
+      "message": "Looking for prompt quotation for film grade HDPE virgin resin (MFI 0.07). Need delivery schedule by end of next month. Please attach TDS and quotation.",
+      "status": "quoted",
+      "admin_notes": "Updated via API test",
+      "updated_at": "2026-10-21T12:53:28.106Z"
+    },
+    {
+      "id": "inq-102",
+      "created_at": "2026-10-21T09:52:51.676Z",
+      "inquiry_type": "rfq",
+      "full_name": "Tariq Al-Mansoor",
+      "company_name": "Gulf Agri-Commodities LLC",
+      "email": "tariq@gulfagri.ae",
+      "phone": "+971 50 334 8921",
+      "product_requirement": "Sustainable Jute Products",
+      "volume_port": "100,000 Burlap Bags / FOB Chittagong",
+      "subject": null,
+      "message": "Need 100% natural jute burlap bags (A-Twill 102x71cm) for grain packing. Standard food-grade hydrocarbon free.",
+      "status": "quoted",
+      "admin_notes": "Quoted $1.42/bag FOB Chittagong on LC at sight."
+    },
+    {
+      "id": "inq-103",
+      "created_at": "2026-10-20T10:52:51.676Z",
+      "inquiry_type": "general",
+      "full_name": "Elena Rostova",
+      "company_name": "Nordic Packaging Solutions",
+      "email": "elena@nordicpack.se",
+      "phone": "+46 8 555 3219",
+      "product_requirement": null,
+      "volume_port": null,
+      "subject": "Partnership & Exclusive Representation",
+      "message": "We are expanding our sustainable packaging import portfolio in Scandinavia and would like to discuss representation of TradeAxis jute and eco-packaging lines.",
+      "status": "contacted",
+      "admin_notes": "Introductory Zoom call scheduled with Managing Director."
+    },
+    {
+      "id": "inq-104",
+      "created_at": "2026-10-19T08:52:51.676Z",
+      "inquiry_type": "rfq",
+      "full_name": "Dr. Rafiqul Islam",
+      "company_name": "Square Formulations Lab",
+      "email": "rafiqul.pharma@square-pharma.com",
+      "phone": "+880 1711 002233",
+      "product_requirement": "Pharmaceutical Packaging",
+      "volume_port": "5,000 kg Cold Form Alu-Alu Foil",
+      "subject": null,
+      "message": "Require Alu-Alu cold form blister foil (OPA 25 / Alu 45 / PVC 60). Please provide batch Certificate of Analysis (COA) and sample reel availability.",
+      "status": "reviewed",
+      "admin_notes": "Samples dispatched via courier. Awaiting QA laboratory report."
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-01",
+      "name": "Export Grade Raw Jute & Burlap (Hessian Cloth)",
+      "category": "jute",
+      "division": "Export Division (Jute Products)",
+      "badge": "100% Eco-Friendly",
+      "description": "Premium export grade raw jute fiber and tightly woven hessian fabric sourced directly from certified Bangladeshi mills. Ideal for agricultural bagging and construction curing.",
+      "specs": "• Basis Weight: 7 oz to 14 oz\n• Moisture Regain: 14% max\n• Widths: 36\" to 72\"\n• Packing: Compressed export bales",
+      "is_featured": true
+    },
+    {
+      "id": "prod-02",
+      "name": "Prime Virgin HDPE Film & Blow Molding Resin",
+      "category": "polymers",
+      "division": "Import & Indenting (Plastics & Resins)",
+      "badge": "Prime Virgin Grade",
+      "description": "High-density polyethylene resins with exceptional tensile strength, puncture resistance, and optimum melt flow index for shopping bag film extrusion.",
+      "specs": "• Melt Flow Index (MFI): 0.05 to 0.12 g/10min\n• Density: 0.952 - 0.956 g/cm³\n• Certifications: REACH, FDA food grade compliant",
+      "is_featured": true
+    },
+    {
+      "id": "prod-03",
+      "name": "Cold-Forming Alu-Alu Blister Foil (45-50 Micron)",
+      "category": "pharma",
+      "division": "Pharmaceutical Packaging & Security",
+      "badge": "Medical Grade OPA/ALU/PVC",
+      "description": "Engineered multi-layer pharmaceutical barrier laminate offering absolute 100% protection against moisture, oxygen, light, and aroma. Certified for high-speed blister thermoforming.",
+      "specs": "• Structure: OPA 25μm / Adhesive / ALU 45-50μm / Adhesive / PVC 60μm\n• Pin-hole free\n• US DMF registration available",
+      "is_featured": true
+    },
+    {
+      "id": "prod-04",
+      "name": "High-Concentration White Masterbatch (70% TiO2)",
+      "category": "masterbatch",
+      "division": "Import & Indenting (Masterbatch)",
+      "badge": "High Opacity TiO2",
+      "description": "Advanced masterbatch containing up to 70% pure Rutile Titanium Dioxide with specialized UV stabilizers and anti-blocking agents.",
+      "specs": "• TiO2 Content: 70% Rutile\n• Carrier: Polyethylene (PE)\n• Applications: Multilayer blown film, injection molding",
+      "is_featured": false
+    }
+  ],
+  "news": [
+    {
+      "id": "news-01",
+      "title": "Global Jute Demand Surges as Single-Use Plastic Bans Tighten",
+      "category": "Market Trends",
+      "publish_date": "2026-09-12",
+      "read_time": "4 min read",
+      "excerpt": "International markets across Europe and North America are accelerating procurement of Bangladeshi raw jute and biodegradable hessian textiles amidst strict regulatory ESG mandates.",
+      "content": "International logistics and industrial packaging supply chains are witnessing a historic pivot toward sustainable natural fibers. Bangladesh, producing the world highest quality Golden Fiber, is positioned at the center of this transition.",
+      "published": true
+    },
+    {
+      "id": "news-02",
+      "title": "Polymer Sourcing Strategies Amidst Freight Volatility",
+      "category": "Industry Insights",
+      "publish_date": "2026-08-28",
+      "read_time": "6 min read",
+      "excerpt": "An in-depth analysis of polymer indenting dynamics, petrochemical feedstock cycles, and practical risk mitigation for industrial converters in South Asia.",
+      "content": "Navigating fluctuating crude oil benchmarks and international freight rates requires structured indenting agreements and disciplined inventory management.",
+      "published": true
+    }
+  ]
+}
