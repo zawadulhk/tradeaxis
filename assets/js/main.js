@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initProductFilter();
   initForms();
   initScrollAnimations();
+  initDynamicNews();
+  initDynamicProducts();
 });
 
 /* --- Header Sticky & Scroll State --- */
@@ -92,26 +94,26 @@ function updateFormFields(form, type) {
 }
 
 /* --- Inquiry / RFQ Modal --- */
+/* --- Inquiry / RFQ Modal (Event Delegation) --- */
 function initRfqModal() {
   const modal = document.getElementById('rfqModal');
-  const openButtons = document.querySelectorAll('[data-open-rfq]');
-  const contactButtons = document.querySelectorAll('[data-open-contact]');
-  const closeButtons = document.querySelectorAll('[data-close-rfq]');
-
-  if (!modal) return;
+  if (!modal || modal._delegationBound) return;
+  modal._delegationBound = true;
 
   const form = modal.querySelector('form');
   const typeSelect = modal.querySelector('.inquiry-type-select');
   const productInput = modal.querySelector('.rfq-product-select') || document.getElementById('rfqProductSelect');
 
-  openButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  document.addEventListener('click', (e) => {
+    // Open RFQ button
+    const openBtn = e.target.closest('[data-open-rfq]');
+    if (openBtn) {
       e.preventDefault();
       if (typeSelect) {
         typeSelect.value = 'rfq';
         updateFormFields(form, 'rfq');
       }
-      const preselect = btn.getAttribute('data-product') || '';
+      const preselect = openBtn.getAttribute('data-product') || '';
       if (productInput && preselect) {
         if (productInput.tagName === 'SELECT') {
           let exists = Array.from(productInput.options).some(opt => opt.value === preselect);
@@ -124,11 +126,12 @@ function initRfqModal() {
       }
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
-    });
-  });
+      return;
+    }
 
-  contactButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    // Open General Contact button
+    const contactBtn = e.target.closest('[data-open-contact]');
+    if (contactBtn) {
       e.preventDefault();
       if (typeSelect) {
         typeSelect.value = 'general';
@@ -136,18 +139,18 @@ function initRfqModal() {
       }
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
-    });
-  });
+      return;
+    }
 
-  closeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    // Close buttons
+    const closeBtn = e.target.closest('[data-close-rfq]');
+    if (closeBtn) {
       modal.classList.remove('active');
       document.body.style.overflow = '';
-    });
-  });
+      return;
+    }
 
-  // Close on backdrop click
-  modal.addEventListener('click', (e) => {
+    // Close on backdrop click
     if (e.target === modal) {
       modal.classList.remove('active');
       document.body.style.overflow = '';
@@ -156,32 +159,31 @@ function initRfqModal() {
 }
 
 /* --- Product Catalog Dynamic Filter --- */
+function applyProductFilter(filter) {
+  const productCards = document.querySelectorAll('.product-item-card');
+  productCards.forEach(card => {
+    const category = card.getAttribute('data-category');
+    if (filter === 'all' || category === filter) {
+      card.style.display = 'flex';
+      setTimeout(() => { card.style.opacity = '1'; }, 10);
+    } else {
+      card.style.opacity = '0';
+      setTimeout(() => { card.style.display = 'none'; }, 200);
+    }
+  });
+}
+
 function initProductFilter() {
   const filterButtons = document.querySelectorAll('.catalog-filter-bar .filter-btn');
-  const productCards = document.querySelectorAll('.product-item-card');
-
-  if (!filterButtons.length || !productCards.length) return;
-
-  function applyFilter(filter) {
-    productCards.forEach(card => {
-      const category = card.getAttribute('data-category');
-      if (filter === 'all' || category === filter) {
-        card.style.display = 'flex';
-        setTimeout(() => { card.style.opacity = '1'; }, 10);
-      } else {
-        card.style.opacity = '0';
-        setTimeout(() => { card.style.display = 'none'; }, 200);
-      }
-    });
-  }
+  if (!filterButtons.length) return;
 
   filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.onclick = () => {
       filterButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const filter = btn.getAttribute('data-filter');
-      applyFilter(filter);
-    });
+      applyProductFilter(filter);
+    };
   });
 
   // Check URL param ?cat=xxx
@@ -193,6 +195,178 @@ function initProductFilter() {
       targetBtn.click();
     }
   }
+}
+
+/* --- Dynamic News & Insights Hydration --- */
+async function initDynamicNews() {
+  const newsGrid = document.getElementById('newsGrid');
+  const homeNewsGrid = document.getElementById('homeNewsGrid');
+  if (!newsGrid && !homeNewsGrid) return;
+
+  try {
+    const res = await fetch('/api/news');
+    if (!res.ok) return;
+    const data = await res.json();
+    const articles = data.news || [];
+    if (!Array.isArray(articles) || articles.length === 0) return;
+
+    // Filter to published articles
+    const published = articles.filter(a => a.published !== false);
+    if (published.length === 0) return;
+
+    // 1. Full news grid on news.html
+    if (newsGrid) {
+      newsGrid.innerHTML = published.map((item, idx) => {
+        const imgSrc = item.image_url || getCategoryThumb(item.category);
+        const excerptHtml = item.excerpt 
+          ? `<p style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">${escapeHtml(item.excerpt)}</p>` 
+          : '';
+        const bodyParagraphs = (item.content || '')
+          .split(/\n+/)
+          .filter(Boolean)
+          .map(p => `<p>${escapeHtml(p)}</p>`)
+          .join('');
+
+        return `
+          <article class="division-card" id="article-${item.id || idx}" style="opacity: 1; transform: translateY(0);">
+            <div class="card-thumb">
+              <img src="${imgSrc}" alt="${escapeHtml(item.title)}">
+              <span class="badge-tag">${escapeHtml(item.category || 'Industry Insights')}</span>
+            </div>
+            <div class="card-body">
+              <div style="font-size: 0.8rem; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 0.35rem;">
+                ${escapeHtml(item.publish_date || '')} ${item.read_time ? '• ' + escapeHtml(item.read_time) : ''}
+              </div>
+              <h3>${escapeHtml(item.title)}</h3>
+              ${excerptHtml}
+              ${bodyParagraphs}
+              <div style="margin-top: auto; padding-top: 1rem;">
+                <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="${escapeHtml(item.title)}">Inquire Regarding This Report</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // 2. Latest 3 news cards on index.html
+    if (homeNewsGrid) {
+      const top3 = published.slice(0, 3);
+      homeNewsGrid.innerHTML = top3.map((item, idx) => {
+        const imgSrc = item.image_url || getCategoryThumb(item.category);
+        const summary = item.excerpt || (item.content ? item.content.slice(0, 140) + '...' : '');
+
+        return `
+          <div class="division-card" style="opacity: 1; transform: translateY(0);">
+            <div class="card-thumb" style="height: 180px;">
+              <img src="${imgSrc}" alt="${escapeHtml(item.title)}">
+              <span class="badge-tag">${escapeHtml(item.category || 'Industry Updates')}</span>
+            </div>
+            <div class="card-body">
+              <div style="font-size: 0.75rem; color: var(--primary); font-weight: 700; margin-bottom: 0.25rem;">
+                ${escapeHtml(item.publish_date || '')}
+              </div>
+              <h4>${escapeHtml(item.title)}</h4>
+              <p>${escapeHtml(summary)}</p>
+              <a href="news.html#article-${item.id || idx}" class="card-cta">Read Article →</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  } catch (err) {
+    console.warn('Dynamic news hydration skipped:', err);
+  }
+}
+
+/* --- Dynamic Product Catalog Hydration --- */
+async function initDynamicProducts() {
+  const productGrid = document.getElementById('productGrid');
+  if (!productGrid) return;
+
+  try {
+    const res = await fetch('/api/products');
+    if (!res.ok) return;
+    const data = await res.json();
+    const products = data.products || [];
+    if (!Array.isArray(products) || products.length === 0) return;
+
+    productGrid.innerHTML = products.map(item => {
+      const imgSrc = item.image_url || getCategoryThumb(item.category);
+      const catLabel = getCategoryLabel(item.category);
+      
+      let tagsHtml = '';
+      if (item.specs) {
+        const tags = item.specs
+          .split(/\\n|\n/)
+          .map(s => s.replace(/^[•\-\*]\s*/, '').trim())
+          .filter(Boolean);
+        if (tags.length > 0) {
+          tagsHtml = `<div class="card-tags">${tags.slice(0, 4).map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>`;
+        }
+      }
+
+      return `
+        <div class="product-item-card division-card" data-category="${escapeHtml(item.category || 'jute')}" style="opacity: 1; transform: translateY(0);">
+          <div class="card-thumb">
+            <img src="${imgSrc}" alt="${escapeHtml(item.name)}">
+            <span class="badge-tag">${escapeHtml(catLabel)}</span>
+          </div>
+          <div class="card-body">
+            <h3>${escapeHtml(item.name)}</h3>
+            ${item.badge ? `<span class="sub-title">${escapeHtml(item.badge)}</span>` : ''}
+            <p>${escapeHtml(item.description || '')}</p>
+            ${tagsHtml}
+            <div style="margin-top: auto; padding-top: 1rem;">
+              <button class="btn btn-outline-gold btn-sm" data-open-rfq data-product="${escapeHtml(item.name)}">Request Specifications</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Re-apply current active filter
+    const activeBtn = document.querySelector('.catalog-filter-bar .filter-btn.active');
+    const filter = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
+    applyProductFilter(filter);
+  } catch (err) {
+    console.warn('Dynamic product hydration skipped:', err);
+  }
+}
+
+/* --- Helper Utilities --- */
+function getCategoryThumb(cat) {
+  const c = (cat || '').toLowerCase();
+  if (c.includes('jute')) return 'assets/images/jute-sustainable-export.jpg';
+  if (c.includes('plastic') || c.includes('polymer') || c.includes('masterbatch')) return 'assets/images/plastic-polymers-masterbatch.jpg';
+  if (c.includes('pharma') || c.includes('packag')) return 'assets/images/pharma-packaging-security.jpg';
+  if (c.includes('food') || c.includes('dairy')) return 'assets/images/food-ingredients-sourcing.jpg';
+  if (c.includes('machin')) return 'assets/images/industrial-machinery-sourcing.jpg';
+  return 'assets/images/hero-global-trade.jpg';
+}
+
+function getCategoryLabel(cat) {
+  const map = {
+    jute: 'Jute Products',
+    plastic: 'Plastic Raw Materials',
+    polymers: 'Plastic Raw Materials',
+    masterbatch: 'Masterbatch',
+    packaging: 'Packaging Materials',
+    pharma: 'Pharma Packaging',
+    food: 'Food Ingredients',
+    machinery: 'Machinery'
+  };
+  return map[(cat || '').toLowerCase()] || cat || 'General';
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 /* --- Form Submissions & Toast Notifications --- */
