@@ -241,64 +241,83 @@ async function initDynamicNews() {
 /* --- Dynamic Product Catalog Hydration --- */
 async function initDynamicProducts() {
   const productGrid = document.getElementById('productGrid');
-  if (!productGrid) return;
+  const featuredProductGrid = document.getElementById('featuredProductGrid');
+  if (!productGrid && !featuredProductGrid) return;
 
   try {
     const res = await fetch('/api/products');
     if (!res.ok) return;
     const data = await res.json();
     const products = data.products;
-    if (!Array.isArray(products)) return;
+    if (!Array.isArray(products) || products.length === 0) return;
 
-    if (products.length === 0) {
-      productGrid.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 4.5rem 1.5rem; color: var(--text-muted);">
-          <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📦</div>
-          <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: 0.35rem;">No Products Listed</h3>
-          <p style="font-size: 0.92rem; max-width: 500px; margin: 0 auto;">No products are currently in the catalog. Products published from the Admin Portal will appear here.</p>
-        </div>
-      `;
-      return;
+    // 1. Hydrate Homepage Featured Cards if featuredProductGrid exists
+    if (featuredProductGrid) {
+      const featured = products.filter(p => Boolean(p.is_featured));
+      if (featured.length > 0) {
+        featuredProductGrid.innerHTML = featured.map(item => {
+          const bullets = (item.specs || '')
+            .split(/\\n|\n/)
+            .map(s => s.replace(/^[•\-\*]\s*/, '').trim())
+            .filter(Boolean);
+
+          const bulletsHtml = bullets.length > 0
+            ? `<ul>${bullets.slice(0, 4).map(b => `<li>${escapeHtml(b)}</li>`).join('')}</ul>`
+            : '';
+
+          return `
+            <div class="product-card" ${item.badge && item.badge.toLowerCase().includes('cleanroom') ? 'style="border: 2px solid var(--primary); background: #FFFDF9;"' : ''}>
+              <h4>${escapeHtml(item.name)}</h4>
+              <p>${escapeHtml(item.description || '')}</p>
+              ${bulletsHtml}
+              <button class="btn ${item.badge && item.badge.toLowerCase().includes('cleanroom') ? 'btn-primary' : 'btn-outline-gold'} btn-sm" data-open-rfq data-product="${escapeHtml(item.name)}" style="margin-top: auto;">Inquire / Get Specs</button>
+            </div>
+          `;
+        }).join('');
+      }
     }
 
-    productGrid.innerHTML = products.map(item => {
-      const imgSrc = item.image_url || getCategoryThumb(item.category);
-      const catLabel = getCategoryLabel(item.category);
-      
-      let tagsHtml = '';
-      if (item.specs) {
-        const tags = item.specs
-          .split(/\\n|\n/)
-          .map(s => s.replace(/^[•\-\*]\s*/, '').trim())
-          .filter(Boolean);
-        if (tags.length > 0) {
-          tagsHtml = `<div class="card-tags">${tags.slice(0, 4).map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>`;
+    // 2. Hydrate Product Catalog page if productGrid exists
+    if (productGrid) {
+      productGrid.innerHTML = products.map(item => {
+        const imgSrc = item.image_url || getCategoryThumb(item.category);
+        const catLabel = getCategoryLabel(item.category);
+        
+        let tagsHtml = '';
+        if (item.specs) {
+          const tags = item.specs
+            .split(/\\n|\n/)
+            .map(s => s.replace(/^[•\-\*]\s*/, '').trim())
+            .filter(Boolean);
+          if (tags.length > 0) {
+            tagsHtml = `<div class="card-tags">${tags.slice(0, 4).map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>`;
+          }
         }
-      }
 
-      return `
-        <div class="product-item-card division-card" data-category="${escapeHtml(item.category || 'jute')}" style="opacity: 1; transform: translateY(0);">
-          <div class="card-thumb">
-            <img src="${imgSrc}" alt="${escapeHtml(item.name)}">
-            <span class="badge-tag">${escapeHtml(catLabel)}</span>
-          </div>
-          <div class="card-body">
-            <h3>${escapeHtml(item.name)}</h3>
-            ${item.badge ? `<span class="sub-title">${escapeHtml(item.badge)}</span>` : ''}
-            <p>${escapeHtml(item.description || '')}</p>
-            ${tagsHtml}
-            <div style="margin-top: auto; padding-top: 1rem;">
-              <button class="btn btn-outline-gold btn-sm" data-open-enquiry data-product="${escapeHtml(item.name)}">Enquire Now</button>
+        return `
+          <div class="product-item-card division-card" data-category="${escapeHtml(item.category || 'jute')}" style="opacity: 1; transform: translateY(0);">
+            <div class="card-thumb">
+              <img src="${imgSrc}" alt="${escapeHtml(item.name)}">
+              <span class="badge-tag">${escapeHtml(catLabel)}</span>
+            </div>
+            <div class="card-body">
+              <h3>${escapeHtml(item.name)}</h3>
+              ${item.badge ? `<span class="sub-title">${escapeHtml(item.badge)}</span>` : ''}
+              <p>${escapeHtml(item.description || '')}</p>
+              ${tagsHtml}
+              <div style="margin-top: auto; padding-top: 1rem;">
+                <button class="btn btn-outline-gold btn-sm" data-open-enquiry data-product="${escapeHtml(item.name)}">Enquire Now</button>
+              </div>
             </div>
           </div>
-        </div>
-      `;
-    }).join('');
+        `;
+      }).join('');
 
-    // Re-apply current active filter
-    const activeBtn = document.querySelector('.catalog-filter-bar .filter-btn.active');
-    const filter = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
-    applyProductFilter(filter);
+      // Re-apply current active filter
+      const activeBtn = document.querySelector('.catalog-filter-bar .filter-btn.active');
+      const filter = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
+      applyProductFilter(filter);
+    }
   } catch (err) {
     console.warn('Dynamic product hydration skipped:', err);
   }

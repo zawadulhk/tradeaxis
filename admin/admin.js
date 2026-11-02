@@ -449,6 +449,62 @@ function renderProductsTable() {
       </td>
     </tr>
   `).join('');
+
+  renderFeaturedTable();
+}
+
+function renderFeaturedTable() {
+  const tbody = document.getElementById('featuredTableBody');
+  if (!tbody) return;
+
+  const featured = STATE.products.filter(item => Boolean(item.is_featured));
+
+  if (featured.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No featured cards currently set. Click "Add Featured Card" or mark items in the Product Catalog as featured.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = featured.map(item => {
+    const specsBullets = (item.specs || '')
+      .split(/\n+/)
+      .map(s => s.replace(/^[•\-\*]\s*/, '').trim())
+      .filter(Boolean);
+    const bulletsHtml = specsBullets.length > 0
+      ? `<ul style="margin: 0; padding-left: 1.2rem; font-size: 0.8rem; color: var(--text-secondary);">${specsBullets.slice(0, 4).map(b => `<li>${escapeHtml(b)}</li>`).join('')}</ul>`
+      : '<span style="color: var(--text-muted); font-size: 0.8rem;">—</span>';
+
+    return `
+      <tr>
+        <td>
+          <strong style="color:var(--text-primary); font-size: 0.95rem;">${escapeHtml(item.name)}</strong>
+          ${item.division ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${escapeHtml(item.division)}</div>` : ''}
+        </td>
+        <td><span class="badge-pill">${escapeHtml(item.category || 'general')}</span></td>
+        <td style="max-width: 240px;">
+          <div style="font-size:0.84rem; color:var(--text-secondary); line-height: 1.4;">${escapeHtml(item.description || '—')}</div>
+        </td>
+        <td style="max-width: 260px;">
+          ${bulletsHtml}
+        </td>
+        <td>
+          ${item.badge ? `<span class="code-pill">${escapeHtml(item.badge)}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">Standard</span>'}
+        </td>
+        <td>
+          <div class="action-btn-row">
+            <button class="btn-icon" title="Edit Card" onclick="openEditFeaturedCardModal('${item.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-icon" title="Remove from Homepage Featured" onclick="toggleFeaturedCard('${item.id}', false)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <button class="btn-icon delete" title="Delete Product" onclick="deleteProductRecord('${item.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 function renderNewsTable() {
@@ -585,6 +641,38 @@ window.openEditProductModal = function(id) {
   openModal('productModal');
 };
 
+window.openAddFeaturedCardModal = function() {
+  document.getElementById('productModalTitle').textContent = 'Add Homepage Featured Card';
+  document.getElementById('prodFormId').value = '';
+  document.getElementById('productForm').reset();
+  document.getElementById('prodFormFeatured').checked = true;
+  openModal('productModal');
+};
+
+window.openEditFeaturedCardModal = function(id) {
+  openEditProductModal(id);
+  document.getElementById('productModalTitle').textContent = 'Edit Homepage Featured Card';
+  document.getElementById('prodFormFeatured').checked = true;
+};
+
+window.toggleFeaturedCard = async function(id, isFeatured) {
+  const item = STATE.products.find(x => x.id === id);
+  if (!item) return;
+  try {
+    const payload = { ...item, is_featured: isFeatured };
+    const res = await apiFetch('/api/products', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      showToast(isFeatured ? 'Card marked as featured' : 'Card removed from featured');
+      await fetchProducts();
+    }
+  } catch (err) {
+    showToast('Failed to update card');
+  }
+};
+
 window.deleteProductRecord = async function(id) {
   if (!confirm('Are you sure you want to delete this product from the catalog?')) return;
   try {
@@ -698,6 +786,7 @@ function initForms() {
 
   // Product Form
   document.getElementById('addProductBtn')?.addEventListener('click', openAddProductModal);
+  document.getElementById('addFeaturedCardBtn')?.addEventListener('click', openAddFeaturedCardModal);
   document.getElementById('productForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('prodFormId').value;

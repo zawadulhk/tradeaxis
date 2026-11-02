@@ -1221,6 +1221,78 @@ textarea.form-control {
 }
 
 /* ==========================================================================
+   INDUSTRY CARDS WITH ORANGE TINT OVERLAY
+   ========================================================================== */
+.industry-image-card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.75rem 1.5rem;
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  color: #FFFFFF;
+}
+
+.industry-image-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(14, 21, 34, 0.45) 0%,
+    rgba(217, 119, 6, 0.78) 50%,
+    rgba(180, 83, 9, 0.92) 100%
+  );
+  transition: background 0.35s ease, opacity 0.35s ease;
+  z-index: 1;
+}
+
+.industry-image-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(217, 119, 6, 0.35);
+}
+
+.industry-image-card:hover::before {
+  background: linear-gradient(
+    180deg,
+    rgba(14, 21, 34, 0.30) 0%,
+    rgba(243, 146, 31, 0.82) 45%,
+    rgba(180, 83, 9, 0.96) 100%
+  );
+}
+
+.industry-image-card .card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.industry-image-card h4 {
+  color: #FFFFFF;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.industry-image-card p {
+  color: #FFF7ED;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+/* ==========================================================================
    RESPONSIVE DESIGN BREAKPOINTS
    ========================================================================== */
 @media (max-width: 1024px) {
