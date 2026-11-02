@@ -838,43 +838,81 @@ button, input, select, textarea {
 }
 
 .hub-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
-  transition: var(--transition);
+  padding: 1.75rem 1.35rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 200px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+}
+
+.hub-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.65) 0%,
+    rgba(15, 23, 42, 0.88) 55%,
+    rgba(15, 23, 42, 0.96) 100%
+  );
+  transition: background 0.3s ease;
+  z-index: 1;
 }
 
 .hub-card:hover {
-  background: rgba(243, 146, 31, 0.08);
-  border-color: rgba(243, 146, 31, 0.35);
-  transform: translateY(-3px);
+  border-color: rgba(243, 146, 31, 0.65);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
 }
 
-.hub-flag {
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
+.hub-card:hover::before {
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.50) 0%,
+    rgba(15, 23, 42, 0.80) 45%,
+    rgba(15, 23, 42, 0.92) 100%
+  );
+}
+
+.hub-card-content {
+  position: relative;
+  z-index: 2;
 }
 
 .hub-card h4 {
   color: #FFFFFF;
-  font-size: 1.1rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hub-card .hub-role {
-  color: var(--primary);
+  color: #F59E0B;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 0.5rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .hub-card p {
-  color: var(--text-light-muted);
-  font-size: 0.85rem;
+  color: #E2E8F0;
+  font-size: 0.88rem;
   line-height: 1.5;
   margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 /* ==========================================================================
@@ -1249,9 +1287,10 @@ textarea.form-control {
   bottom: 0;
   background: linear-gradient(
     180deg,
-    rgba(14, 21, 34, 0.45) 0%,
-    rgba(217, 119, 6, 0.78) 50%,
-    rgba(180, 83, 9, 0.92) 100%
+    transparent 0%,
+    transparent 48%,
+    rgba(217, 119, 6, 0.78) 75%,
+    rgba(180, 83, 9, 0.94) 100%
   );
   transition: background 0.35s ease, opacity 0.35s ease;
   z-index: 1;
@@ -1265,8 +1304,9 @@ textarea.form-control {
 .industry-image-card:hover::before {
   background: linear-gradient(
     180deg,
-    rgba(14, 21, 34, 0.30) 0%,
-    rgba(243, 146, 31, 0.82) 45%,
+    transparent 0%,
+    transparent 42%,
+    rgba(243, 146, 31, 0.82) 70%,
     rgba(180, 83, 9, 0.96) 100%
   );
 }

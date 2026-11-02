@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <rect width="900" height="600" fill="#FFFFFF"/>
+  <g transform="translate(450, 300) rotate(-33.69)">
+    <!-- Red top semicircle -->
+    <path d="M -150,0 A 150,150 0 0,1 150,0 A 75,75 0 0,1 0,0 A 75,75 0 0,0 -150,0 Z" fill="#CD2E3A"/>
+    <!-- Blue bottom semicircle -->
+    <path d="M 150,0 A 150,150 0 0,1 -150,0 A 75,75 0 0,1 0,0 A 75,75 0 0,0 150,0 Z" fill="#0047A0"/>
+  </g>
+  <!-- Geon (top left) -->
+  <g transform="translate(250, 160) rotate(-33.69)" fill="#000000">
+    <rect x="-80" y="-35" width="160" height="15"/>
+    <rect x="-80" y="-10" width="160" height="15"/>
+    <rect x="-80" y="15" width="160" height="15"/>
+  </g>
+  <!-- Ri (top right) -->
+  <g transform="translate(650, 160) rotate(33.69)" fill="#000000">
+    <rect x="-80" y="-35" width="160" height="15"/>
+    <rect x="-80" y="-10" width="75" height="15"/>
+    <rect x="5" y="-10" width="75" height="15"/>
+    <rect x="-80" y="15" width="160" height="15"/>
+  </g>
+  <!-- Gam (bottom left) -->
+  <g transform="translate(250, 440) rotate(33.69)" fill="#000000">
+    <rect x="-80" y="-35" width="75" height="15"/>
+    <rect x="5" y="-35" width="75" height="15"/>
+    <rect x="-80" y="-10" width="160" height="15"/>
+    <rect x="-80" y="15" width="75" height="15"/>
+    <rect x="5" y="15" width="75" height="15"/>
+  </g>
+  <!-- Gon (bottom right) -->
+  <g transform="translate(650, 440) rotate(-33.69)" fill="#000000">
+    <rect x="-80" y="-35" width="75" height="15"/>
+    <rect x="5" y="-35" width="75" height="15"/>
+    <rect x="-80" y="-10" width="75" height="15"/>
+    <rect x="5" y="-10" width="75" height="15"/>
+    <rect x="-80" y="15" width="75" height="15"/>
+    <rect x="5" y="15" width="75" height="15"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600">
+  <rect width="900" height="600" fill="#DE2910"/>
+  <!-- Main star -->
+  <polygon fill="#FFDE00" points="150,55 178,141 268,141 195,194 223,280 150,227 77,280 105,194 32,141 122,141"/>
+  <!-- Star 1 -->
+  <polygon fill="#FFDE00" transform="translate(300, 60) rotate(-58.6) scale(30)" points="0,-1 0.588,0.809 -0.951,-0.309 0.951,-0.309 -0.588,0.809"/>
+  <!-- Star 2 -->
+  <polygon fill="#FFDE00" transform="translate(360, 120) rotate(-31.6) scale(30)" points="0,-1 0.588,0.809 -0.951,-0.309 0.951,-0.309 -0.588,0.809"/>
+  <!-- Star 3 -->
+  <polygon fill="#FFDE00" transform="translate(360, 210) rotate(0) scale(30)" points="0,-1 0.588,0.809 -0.951,-0.309 0.951,-0.309 -0.588,0.809"/>
+  <!-- Star 4 -->
+  <polygon fill="#FFDE00" transform="translate(300, 270) rotate(26.6) scale(30)" points="0,-1 0.588,0.809 -0.951,-0.309 0.951,-0.309 -0.588,0.809"/>
+</svg>
