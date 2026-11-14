@@ -33,12 +33,13 @@ if (!process.env.ADMIN_PASSWORD) {
   process.env.ADMIN_PASSWORD = 'Adminwasif123!';
 }
 
-// Import serverless API handlers
+// Import self-sustaining API handlers
 import authHandler from './api/auth.js';
 import inquiriesHandler from './api/inquiries.js';
 import productsHandler from './api/products.js';
 import newsHandler from './api/news.js';
 import statusHandler from './api/status.js';
+import backupHandler from './api/backup.js';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -58,7 +59,6 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost:3000'}`);
   const pathname = parsedUrl.pathname;
 
-  // Enhance res with helper methods if needed
   if (!res.status) {
     res.status = function (code) {
       res.statusCode = code;
@@ -88,15 +88,38 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/status' || pathname === '/api/status.js') {
     return statusHandler(req, res);
   }
+  if (pathname === '/api/backup' || pathname === '/api/backup.js') {
+    return backupHandler(req, res);
+  }
+
+  // Block direct HTTP access to internal data files or server config (matching Apache .htaccess)
+  const lowerPath = pathname.toLowerCase();
+  if (
+    lowerPath.startsWith('/data/') ||
+    lowerPath.startsWith('/lib/') ||
+    lowerPath === '/.env' ||
+    lowerPath === '/.env.local' ||
+    lowerPath === '/server.js' ||
+    lowerPath === '/package.json'
+  ) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    res.end('403 Forbidden');
+    return;
+  }
 
   // 2. SERVE STATIC FILES
   let filePath = path.join(__dirname, decodeURIComponent(pathname));
 
   // If path is a directory (e.g. /admin or /)
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    // Redirect /admin -> /admin/ so relative admin.css / admin.js resolve properly
+    if (!pathname.endsWith('/')) {
+      res.writeHead(301, { Location: pathname + '/' + parsedUrl.search });
+      res.end();
+      return;
+    }
     filePath = path.join(filePath, 'index.html');
   } else if (!fs.existsSync(filePath)) {
-    // Try clean URLs (e.g. /products -> /products.html or /admin -> /admin/index.html)
     if (fs.existsSync(filePath + '.html')) {
       filePath = filePath + '.html';
     } else if (fs.existsSync(path.join(filePath, 'index.html'))) {
@@ -112,7 +135,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 404
   res.writeHead(404, { 'Content-Type': 'text/plain' });
   res.end('404 Not Found');
 });
@@ -120,9 +142,8 @@ const server = http.createServer(async (req, res) => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`\n======================================================`);
-  console.log(`🚀 TradeAxis Server listening on http://localhost:${PORT}`);
-  console.log(`🔒 Admin Portal: http://localhost:${PORT}/admin/`);
-  console.log(`🔑 Master Password: ${process.env.ADMIN_PASSWORD ? 'Configured' : 'Adminwasif123!'}`);
-  console.log(`📦 Supabase Mode: ${process.env.SUPABASE_URL ? 'Cloud (' + process.env.SUPABASE_URL + ')' : 'Local JSON Store (fallback)'}`);
+  console.log(`TradeAxis Self-Sustaining Server: http://localhost:${PORT}`);
+  console.log(`Admin Portal: http://localhost:${PORT}/admin/`);
+  console.log(`Storage: Local JSON Store (data/store.json)`);
   console.log(`======================================================\n`);
 });

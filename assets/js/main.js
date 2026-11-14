@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initDynamicNews();
   initDynamicProducts();
+  initWhatsAppButton();
 });
 
 /* --- Header Sticky & Scroll State --- */
@@ -166,7 +167,7 @@ async function initDynamicNews() {
   if (!newsGrid && !homeNewsGrid) return;
 
   try {
-    const res = await fetch('/api/news');
+    const res = await fetch('api/news');
     if (!res.ok) return;
     const data = await res.json();
     const articles = data.news || [];
@@ -245,7 +246,7 @@ async function initDynamicProducts() {
   if (!productGrid && !featuredProductGrid) return;
 
   try {
-    const res = await fetch('/api/products');
+    const res = await fetch('api/products');
     if (!res.ok) return;
     const data = await res.json();
     const products = data.products;
@@ -385,7 +386,7 @@ function initForms() {
       }
 
       try {
-        const res = await fetch('/api/inquiries', {
+        const res = await fetch('api/inquiries', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -399,11 +400,13 @@ function initForms() {
         }
       } catch (err) {
         console.warn('API submission failed:', err);
-      }
-
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
+        showToast('Network error submitting enquiry. Please message us on WhatsApp or email tradeaxisglobalventures@gmail.com.');
+        return;
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
       }
 
       // Close modal if inside modal
@@ -417,6 +420,24 @@ function initForms() {
       form.reset();
     });
   });
+}
+
+/* --- Floating WhatsApp Trade Desk Button --- */
+function initWhatsAppButton() {
+  if (document.querySelector('.whatsapp-float')) return;
+  const link = document.createElement('a');
+  link.className = 'whatsapp-float';
+  link.href = 'https://wa.me/8801757595881?text=Hello%20TradeAxis%20Global%20Ventures%2C%20I%20would%20like%20to%20inquire%20about%20your%20products%20and%20sourcing%20services.';
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.setAttribute('aria-label', 'Chat with TradeAxis on WhatsApp');
+  link.innerHTML = `
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.375c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2zm5.813 14.125c-.25.703-1.438 1.344-2 1.422-.531.078-1.203.109-1.938-.125-.453-.141-1.031-.344-1.766-.656-3.094-1.328-5.109-4.438-5.266-4.641-.156-.203-1.266-1.688-1.266-3.219s.797-2.281 1.078-2.594c.281-.313.609-.391.813-.391.203 0 .406 0 .578.016.188 0 .438-.078.688.531.25.609.859 2.094.938 2.25.078.156.125.344.031.547-.094.203-.141.328-.297.5-.156.172-.313.391-.453.531-.156.156-.313.328-.141.641.172.313.781 1.281 1.672 2.078 1.156 1.031 2.125 1.344 2.438 1.5.313.156.484.125.672-.078.188-.203.766-.891.969-1.203.203-.313.406-.266.688-.156.281.109 1.797.844 2.109 1 .313.156.516.234.594.359.078.125.078.734-.172 1.438z"/>
+    </svg>
+    <span>Chat on WhatsApp</span>
+  `;
+  document.body.appendChild(link);
 }
 
 function showToast(message) {

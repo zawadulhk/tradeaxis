@@ -1,0 +1,52 @@
+# TradeAxis Global Ventures — Apache / LiteSpeed Shared Hosting Rules
+Options -Indexes
+
+# Preserve Authorization header across PHP CGI/FastCGI environments
+<IfModule mod_setenvif.c>
+  SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Pass Authorization header through rewrites
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+  # Route /api/<endpoint> requests to self-sustaining PHP router
+  RewriteRule ^api/([a-zA-Z0-9_-]+)/?$ api/index.php?_route=$1 [QSA,L]
+
+  # Support extensionless clean HTML URLs (e.g. /products -> products.html)
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>
+
+# Block public HTTP access to environment files, Node server scripts, and package metadata
+<FilesMatch "^(\.env.*|server\.js|package(-lock)?\.json|vercel\.json)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# GZIP Compression for fast page loads
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Browser Caching for static assets (HTML and API JSON excluded)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>

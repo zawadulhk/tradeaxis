@@ -1,7 +1,12 @@
 /**
  * TRADEAXIS GLOBAL VENTURES — COMMAND PORTAL CLIENT
- * Core Controller for Authentication, Commercial Inquiries CRM, Catalog CMS, and Supabase Sync.
+ * Core Controller for Authentication, Commercial Inquiries CRM, Catalog CMS, and Self-Sustaining Storage.
  */
+
+// Resolve API base path dynamically so /admin works at domain root OR inside any shared hosting subdirectory
+const API_BASE = window.location.pathname.includes('/admin')
+  ? window.location.pathname.replace(/\/admin.*$/, '/api')
+  : '../api';
 
 // Global State Store
 const STATE = {
@@ -70,7 +75,7 @@ function initAuth() {
   const savedToken = sessionStorage.getItem('tradeaxis_admin_token');
   if (savedToken) {
     STATE.token = savedToken;
-    apiFetch('/api/auth')
+    apiFetch(`${API_BASE}/auth`)
       .then(res => res.json())
       .then(data => {
         if (data.authenticated) {
@@ -99,7 +104,7 @@ function initAuth() {
       submitBtn.innerHTML = '<span>Verifying...</span>';
 
       try {
-        const res = await fetch('/api/auth', {
+        const res = await fetch(`${API_BASE}/auth`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password })
@@ -215,34 +220,36 @@ async function loadAllData() {
 
 async function fetchStatus() {
   try {
-    const res = await apiFetch('/api/status');
+    const res = await apiFetch(`${API_BASE}/status`);
     const data = await res.json();
 
     const badge = document.getElementById('dbStatusBadge');
     const badgeText = document.getElementById('dbStatusText');
     const settingsMode = document.getElementById('settingsStorageMode');
-    const settingsUrl = document.getElementById('settingsSupabaseUrl');
+    const settingsEngine = document.getElementById('settingsEngineInfo');
+    const countInq = document.getElementById('settingsCountInquiries');
+    const countProd = document.getElementById('settingsCountProducts');
+    const countNews = document.getElementById('settingsCountNews');
 
-    if (data.supabaseConfigured) {
+    if (res.ok && data.connected !== false) {
       if (badge) badge.classList.add('connected');
-      if (badgeText) badgeText.textContent = 'Supabase Cloud';
-      if (settingsMode) {
-        settingsMode.textContent = 'Supabase Cloud (PostgreSQL)';
-        settingsMode.className = 'badge-pill gold';
-      }
-      if (settingsUrl && data.supabaseUrl) {
-        settingsUrl.textContent = data.supabaseUrl;
-      }
+      if (badgeText) badgeText.textContent = 'Storage: Local JSON Store (Active)';
     } else {
       if (badge) badge.classList.remove('connected');
-      if (badgeText) badgeText.textContent = 'Local Store (Fallback)';
-      if (settingsMode) {
-        settingsMode.textContent = 'Local Persistent JSON Store';
-        settingsMode.className = 'badge-pill';
-      }
-      if (settingsUrl) {
-        settingsUrl.textContent = 'Not configured in Vercel environment';
-      }
+      if (badgeText) badgeText.textContent = 'Storage Unavailable';
+    }
+
+    if (settingsMode) {
+      settingsMode.textContent = data.storage || data.storageMode || 'Self-Sustaining Local Storage (data/store.json)';
+      settingsMode.className = 'badge-pill gold';
+    }
+    if (settingsEngine) {
+      settingsEngine.textContent = data.engine || 'Shared Hosting / Local File System';
+    }
+    if (data.counts) {
+      if (countInq) countInq.textContent = data.counts.inquiries ?? STATE.inquiries.length;
+      if (countProd) countProd.textContent = data.counts.products ?? STATE.products.length;
+      if (countNews) countNews.textContent = data.counts.news ?? STATE.news.length;
     }
   } catch (err) {
     console.warn('Status fetch error:', err);
@@ -251,16 +258,16 @@ async function fetchStatus() {
 
 async function fetchInquiries() {
   try {
-    const res = await apiFetch('/api/inquiries');
+    const res = await apiFetch(`${API_BASE}/inquiries`);
     const data = await res.json();
     if (!res.ok) {
       console.warn('Inquiries fetch error:', data);
       STATE.inquiries = [];
       const tbody = document.getElementById('inquiriesTableBody');
       if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="7" class="table-empty" style="color:#b91c1c; padding: 2rem 1rem;">
-          <div style="font-weight:600; margin-bottom:0.4rem;">⚠️ Supabase Table Notice: ${escapeHtml(data.error || 'Inquiry query failed')}</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); max-width:600px; margin:0 auto;">${escapeHtml(data.details || 'Execute supabase-schema.sql in your Supabase SQL Editor to initialize the inquiries table.')}</div>
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty" style="color:#b91c1c; padding: 2rem 1rem;">
+          <div style="font-weight:600; margin-bottom:0.4rem;">Storage Notice: ${escapeHtml(data.error || 'Inquiry query failed')}</div>
+          <div style="font-size:0.82rem; color:var(--text-muted); max-width:600px; margin:0 auto;">${escapeHtml(data.details || 'Ensure data/store.json is writable by the web server.')}</div>
         </td></tr>`;
       }
       return;
@@ -282,7 +289,7 @@ async function fetchInquiries() {
 
 async function fetchProducts() {
   try {
-    const res = await apiFetch('/api/products');
+    const res = await apiFetch(`${API_BASE}/products`);
     const data = await res.json();
     if (!res.ok) {
       console.warn('Products fetch error:', data);
@@ -290,8 +297,8 @@ async function fetchProducts() {
       const tbody = document.getElementById('productsTableBody');
       if (tbody) {
         tbody.innerHTML = `<tr><td colspan="6" class="table-empty" style="color:#b91c1c; padding: 2rem 1rem;">
-          <div style="font-weight:600; margin-bottom:0.4rem;">⚠️ Supabase Table Notice: ${escapeHtml(data.error || 'Product query failed')}</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); max-width:600px; margin:0 auto;">${escapeHtml(data.details || 'Execute supabase-schema.sql in your Supabase SQL Editor to initialize the products table.')}</div>
+          <div style="font-weight:600; margin-bottom:0.4rem;">Storage Notice: ${escapeHtml(data.error || 'Product query failed')}</div>
+          <div style="font-size:0.82rem; color:var(--text-muted); max-width:600px; margin:0 auto;">${escapeHtml(data.details || 'Ensure data/store.json is writable by the web server.')}</div>
         </td></tr>`;
       }
       return;
@@ -305,7 +312,7 @@ async function fetchProducts() {
 
 async function fetchNews() {
   try {
-    const res = await apiFetch('/api/news');
+    const res = await apiFetch(`${API_BASE}/news`);
     const data = await res.json();
     STATE.news = data.news || [];
     renderNewsTable();
@@ -572,7 +579,7 @@ async function saveInquiryChanges() {
   const status = document.getElementById('modalStatusSelect').value;
 
   try {
-    const res = await apiFetch('/api/inquiries', {
+    const res = await apiFetch(`${API_BASE}/inquiries`, {
       method: 'PATCH',
       body: JSON.stringify({
         id,
@@ -600,7 +607,7 @@ window.deleteInquiryRecord = async function(id) {
   }
 
   try {
-    const res = await apiFetch(`/api/inquiries?id=${encodeURIComponent(id)}`, {
+    const res = await apiFetch(`${API_BASE}/inquiries?id=${encodeURIComponent(id)}`, {
       method: 'DELETE'
     });
     if (res.ok) {
@@ -660,7 +667,7 @@ window.toggleFeaturedCard = async function(id, isFeatured) {
   if (!item) return;
   try {
     const payload = { ...item, is_featured: isFeatured };
-    const res = await apiFetch('/api/products', {
+    const res = await apiFetch(`${API_BASE}/products`, {
       method: 'POST',
       body: JSON.stringify(payload)
     });
@@ -676,7 +683,7 @@ window.toggleFeaturedCard = async function(id, isFeatured) {
 window.deleteProductRecord = async function(id) {
   if (!confirm('Are you sure you want to delete this product from the catalog?')) return;
   try {
-    const res = await apiFetch(`/api/products?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    const res = await apiFetch(`${API_BASE}/products?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     if (res.ok) {
       showToast('Product removed');
       await fetchProducts();
@@ -723,7 +730,7 @@ window.openEditNewsModal = function(id) {
 window.deleteNewsRecord = async function(id) {
   if (!confirm('Are you sure you want to delete this article?')) return;
   try {
-    const res = await apiFetch(`/api/news?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    const res = await apiFetch(`${API_BASE}/news?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
     if (res.ok) {
       showToast('Article removed');
       await fetchNews();
@@ -802,7 +809,7 @@ function initForms() {
     };
 
     try {
-      const res = await apiFetch('/api/products', {
+      const res = await apiFetch(`${API_BASE}/products`, {
         method: 'POST',
         body: JSON.stringify(payload)
       });
@@ -835,7 +842,7 @@ function initForms() {
     };
 
     try {
-      const res = await apiFetch('/api/news', {
+      const res = await apiFetch(`${API_BASE}/news`, {
         method: 'POST',
         body: JSON.stringify(payload)
       });
@@ -850,18 +857,75 @@ function initForms() {
     }
   });
 
-  // Copy Schema Button
-  document.getElementById('copySchemaBtn')?.addEventListener('click', () => {
-    const code = document.getElementById('schemaSqlCode')?.value;
-    if (code) {
-      navigator.clipboard.writeText(code).then(() => {
-        showToast('SQL schema copied to clipboard');
-      });
-    }
-  });
+  // Full JSON Backup Download
+  document.getElementById('download-backup-btn')?.addEventListener('click', downloadFullBackup);
+
+  // Full JSON Restore Upload
+  document.getElementById('restore-backup-btn')?.addEventListener('click', restoreFullBackup);
 
   // Export to CSV
   document.getElementById('exportCsvBtn')?.addEventListener('click', exportInquiriesToCsv);
+}
+
+async function downloadFullBackup() {
+  try {
+    const res = await apiFetch(`${API_BASE}/backup`);
+    if (!res.ok) {
+      showToast('Failed to download backup');
+      return;
+    }
+    const data = await res.json();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tradeaxis-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast('Full JSON backup downloaded');
+  } catch (err) {
+    showToast('Backup download failed');
+  }
+}
+
+async function restoreFullBackup() {
+  const input = document.getElementById('restore-backup-input');
+  const file = input?.files?.[0];
+  if (!file) {
+    showToast('Please select a .json backup file first');
+    return;
+  }
+
+  if (!confirm('Restoring a backup will overwrite existing enquiries, products, and news in data/store.json. Continue?')) {
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    if (!Array.isArray(parsed.inquiries) || !Array.isArray(parsed.products) || !Array.isArray(parsed.news)) {
+      showToast('Invalid backup file: inquiries, products, and news arrays are required');
+      return;
+    }
+
+    const res = await apiFetch(`${API_BASE}/backup`, {
+      method: 'POST',
+      body: JSON.stringify(parsed)
+    });
+
+    if (res.ok) {
+      input.value = '';
+      showToast('Database backup restored successfully');
+      await loadAllData();
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      showToast(errData.error || 'Failed to restore backup');
+    }
+  } catch (err) {
+    showToast('Could not parse backup JSON file');
+  }
 }
 
 function exportInquiriesToCsv() {
