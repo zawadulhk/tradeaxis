@@ -138,7 +138,7 @@ function generateUuid(): string {
 }
 
 function readStore(): array {
-    $default = ['inquiries' => [], 'products' => [], 'news' => []];
+    $default = ['inquiries' => [], 'products' => [], 'news' => [], 'downloads' => []];
     $dir = dirname(STORE_FILE);
     if (!is_dir($dir)) {
         @mkdir($dir, 0755, true);
@@ -172,6 +172,7 @@ function readStore(): array {
         'inquiries' => is_array($data['inquiries'] ?? null) ? $data['inquiries'] : [],
         'products'  => is_array($data['products'] ?? null) ? $data['products'] : [],
         'news'      => is_array($data['news'] ?? null) ? $data['news'] : [],
+        'downloads' => is_array($data['downloads'] ?? null) ? $data['downloads'] : [],
     ];
 }
 
@@ -185,6 +186,7 @@ function writeStore(array $data): bool {
         'inquiries' => array_values(is_array($data['inquiries'] ?? null) ? $data['inquiries'] : []),
         'products'  => array_values(is_array($data['products'] ?? null) ? $data['products'] : []),
         'news'      => array_values(is_array($data['news'] ?? null) ? $data['news'] : []),
+        'downloads' => array_values(is_array($data['downloads'] ?? null) ? $data['downloads'] : []),
     ];
 
     $json = json_encode($normalized, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -208,6 +210,7 @@ function getStorageStatusPayload(array $store): array {
             'inquiries' => count($store['inquiries']),
             'products'  => count($store['products']),
             'news'      => count($store['news']),
+            'downloads' => count($store['downloads']),
         ],
         'timestamp' => gmdate('c'),
     ];
@@ -585,7 +588,143 @@ switch ($route) {
         break;
 
     // =========================================================================
-    // 6. FULL JSON BACKUP & RESTORE (/api/backup)
+    // 6. DOWNLOADS CENTER CMS (/api/downloads)
+    // =========================================================================
+    case 'downloads':
+        if ($method === 'GET') {
+            sendJson(200, ['downloads' => $store['downloads']]);
+        }
+
+        requireAdmin();
+
+        if ($method === 'POST' || $method === 'PUT' || $method === 'PATCH') {
+            $data = readJsonBody();
+            $title = trim((string)($data['title'] ?? ''));
+            if ($title === '') {
+                sendJson(400, ['error' => 'Document title is required']);
+            }
+
+            $id = !empty($data['id']) ? (string)$data['id'] : generateUuid();
+            $isExisting = !empty($data['id']);
+            $existingItem = null;
+            if ($isExisting) {
+                foreach ($store['downloads'] as $ex) {
+                    if ((string)($ex['id'] ?? '') === $id) {
+                        $existingItem = $ex;
+                        break;
+                    }
+                }
+            }
+
+            $fileUrl  = (string)($existingItem['file_url'] ?? ($data['file_url'] ?? ''));
+            $fileName = (string)($existingItem['file_name'] ?? ($data['file_name'] ?? ''));
+
+            if (!empty($data['file_data']) && !empty($data['file_name'])) {
+                $origName = (string)$data['file_name'];
+                $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', $origName);
+                $ext = strtolower(pathinfo($safeName, PATHINFO_EXTENSION));
+                $allowedExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip'];
+                if (!in_array($ext, $allowedExts, true)) {
+                    sendJson(400, ['error' => 'Unsupported document file extension']);
+                }
+
+                $base64Str = preg_replace('/^data:[^;]+;base64,/', '', (string)$data['file_data']);
+                $decoded = base64_decode((string)$base64Str, true);
+                if ($decoded === false) {
+                    sendJson(400, ['error' => 'Invalid base64 file encoding']);
+                }
+                if (strlen($decoded) > 25 * 1024 * 1024) {
+                    sendJson(400, ['error' => 'File exceeds 25 MB upload limit']);
+                }
+
+                $downloadsDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'downloads';
+                if (!is_dir($downloadsDir) && !@mkdir($downloadsDir, 0755, true)) {
+                    sendJson(500, ['error' => 'Failed to create assets/downloads directory']);
+                }
+
+                $savedFileName = time() . '-' . $safeName;
+                $targetPath = $downloadsDir . DIRECTORY_SEPARATOR . $savedFileName;
+                if (file_put_contents($targetPath, $decoded, LOCK_EX) === false) {
+                    sendJson(500, ['error' => 'Failed to write uploaded document']);
+                }
+
+                $fileUrl  = 'assets/downloads/' . $savedFileName;
+                $fileName = $origName;
+            }
+
+            $item = [
+                'id'          => $id,
+                'title'       => $title,
+                'category'    => (string)($data['category'] ?? 'PDF • Documentation'),
+                'description' => (string)($data['description'] ?? ''),
+                'file_url'    => $fileUrl,
+                'file_name'   => $fileName,
+                'is_primary'  => !empty($data['is_primary']),
+                'updated_at'  => gmdate('Y-m-d\TH:i:s\Z'),
+            ];
+
+            $replaced = false;
+            if ($isExisting) {
+                foreach ($store['downloads'] as $idx => $existing) {
+                    if ((string)($existing['id'] ?? '') === $id) {
+                        $store['downloads'][$idx] = array_merge($existing, $item);
+                        $item = $store['downloads'][$idx];
+                        $replaced = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$replaced) {
+                array_unshift($store['downloads'], $item);
+            }
+
+            if (!writeStore($store)) {
+                sendJson(500, ['error' => 'Failed to save document metadata']);
+            }
+
+            sendJson(200, ['success' => true, 'download' => $item]);
+        }
+
+        if ($method === 'DELETE') {
+            $body = readJsonBody();
+            $id = (string)($_GET['id'] ?? ($body['id'] ?? ''));
+            if ($id === '') {
+                sendJson(400, ['error' => 'Missing document ID']);
+            }
+
+            foreach ($store['downloads'] as $existing) {
+                if ((string)($existing['id'] ?? '') === $id) {
+                    $relUrl = (string)($existing['file_url'] ?? '');
+                    if (strpos($relUrl, 'assets/downloads/') === 0) {
+                        $diskFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relUrl);
+                        if (is_file($diskFile)) {
+                            @unlink($diskFile);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            $store['downloads'] = array_values(array_filter(
+                $store['downloads'],
+                static function ($x) use ($id) {
+                    return (string)($x['id'] ?? '') !== $id;
+                }
+            ));
+
+            if (!writeStore($store)) {
+                sendJson(500, ['error' => 'Failed to delete document']);
+            }
+
+            sendJson(200, ['success' => true, 'deletedId' => $id]);
+        }
+
+        sendJson(405, ['error' => 'Method Not Allowed']);
+        break;
+
+    // =========================================================================
+    // 7. FULL JSON BACKUP & RESTORE (/api/backup)
     // =========================================================================
     case 'backup':
         requireAdmin();
@@ -615,6 +754,7 @@ switch ($route) {
                     'inquiries' => count($data['inquiries']),
                     'products'  => count($data['products']),
                     'news'      => count($data['news']),
+                    'downloads' => is_array($data['downloads'] ?? null) ? count($data['downloads']) : 0,
                 ],
             ]);
         }

@@ -19,7 +19,7 @@
       "badge": "Sustainable Retail & Promotional Bags",
       "description": "Durable, laminated or unlaminated eco-friendly jute shopping totes with padded cotton or rope handles. Fully customizable with screen printing or private branding for global department stores.",
       "specs": "• Handles: Padded cotton, cane, or round rope\n• Printing: AZO-free screen printing, custom Pantone\n• Lamination: Food-grade PP or unlaminated breathable\n• Custom branding: OEM / Private label available",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-03",
@@ -29,7 +29,7 @@
       "badge": "Lifestyle Storage & Tableware",
       "description": "Hand-coiled jute laundry hampers, nested storage baskets, decorative wall hangings, and dining table runners designed for modern minimalist interiors.",
       "specs": "• Craftsmanship: Traditional Bangladeshi artisan coiled\n• Compliance: US & EU eco-decor standards\n• Applications: Laundry hampers, planters, tabletop\n• Packaging: Export master cartons",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-04",
@@ -49,7 +49,7 @@
       "badge": "Blown Film & Rotomolding",
       "description": "High optical clarity, superior tensile strength, and puncture resistance. Ideal for packaging films, agricultural sheeting, shrink wrapping, and rotational molding applications.",
       "specs": "• MFI: 0.8 - 2.0 g/10min (Film), 4.0 - 6.0 (Rotomolding)\n• Density: 0.918 - 0.924 g/cm³\n• Features: High puncture resistance, superior sealability",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-06",
@@ -59,7 +59,7 @@
       "badge": "Raffia & Injection Grade",
       "description": "Homopolymer for raffia tape, woven bags, and monofilament. Random and block copolymers for high clarity food containers, thermoforming sheets, and durable consumer housewares.",
       "specs": "• Grades: Raffia, Film (BOPP/CPP), Injection, Random Copo\n• MFI Range: 2.5 - 35 g/10min\n• Key Attributes: High rigidity, thermal resistance",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-07",
@@ -119,7 +119,7 @@
       "badge": "Brand Protection & Serialization",
       "description": "High-security optical holograms, void-evident security seals, variable 2D QR serialization, and security-printed foil substrates engineered to prevent unauthorized medicine duplication and grey-market diversion.",
       "specs": "• Technologies: Dot-matrix, e-beam kinetic optical effects\n• Features: Tamper-evident void release, nano-text\n• Tracking: Serialized QR / DataMatrix integration",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-13",
@@ -139,7 +139,7 @@
       "badge": "Texture & Melt Resistance",
       "description": "Specialized emulsifier-stabilizer blends engineered to optimize overrun, ensure smooth mouthfeel, and provide freeze-thaw stability in premium ice creams and frozen desserts. Also supplying Xanthan & Guar gums.",
       "specs": "• Blends: Integrated emulsifier & stabilizer systems\n• Hydrocolloids: Guar gum, Xanthan gum, Carrageenan\n• Applications: Hard pack, soft serve, frozen treats",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-15",
@@ -149,7 +149,7 @@
       "badge": "Extrusion & Converting Lines",
       "description": "Energy-efficient plastic injection molding machines, blown film extrusion lines, automatic high-speed slitter rewinders, and flow wrapping machinery sourced directly from verified Chinese and European manufacturers.",
       "specs": "• Lines: Single/multilayer blown film, Injection (80T - 1200T)\n• Converting: High-speed slitter rewinders, bag makers\n• Support: Turnkey commissioning & technical warranty",
-      "is_featured": true
+      "is_featured": false
     },
     {
       "id": "prod-16",
@@ -159,7 +159,7 @@
       "badge": "cGMP Compliant Cleanroom Machinery",
       "description": "Continuous ice cream freezers, pasteurization units, automated blister sealing and cartoning lines, tablet presses, and liquid filling lines built to cGMP and sanitary food safety standards.",
       "specs": "• Pharma: Blister thermoforming, rotary tablet press, cartoner\n• Food: Continuous ice cream freezers (150L - 1200L/hr)\n• Compliance: 316L stainless steel, cGMP, CE certified",
-      "is_featured": true
+      "is_featured": false
     }
   ],
   "news": [
@@ -182,6 +182,62 @@
       "excerpt": "An in-depth analysis of polymer indenting dynamics, petrochemical feedstock cycles, and practical risk mitigation for industrial converters in South Asia.",
       "content": "Navigating fluctuating crude oil benchmarks and international freight rates requires structured indenting agreements and disciplined inventory management.",
       "published": true
+    }
+  ],
+  "downloads": [
+    {
+      "id": "doc-01",
+      "title": "TradeAxis Corporate Profile 2026",
+      "category": "PDF • Comprehensive Overview",
+      "description": "Complete introduction to TradeAxis Global Ventures, business vertical breakdown, global sourcing hubs, and trading capabilities.",
+      "file_url": "",
+      "file_name": "",
+      "is_primary": true
+    },
+    {
+      "id": "doc-02",
+      "title": "Sustainable Jute Export Catalog",
+      "category": "PDF • Full Catalog",
+      "description": "Export-ready collection of natural braided jute rugs, tote bags, laundry baskets, wall décor, and private label specifications.",
+      "file_url": "",
+      "file_name": "",
+      "is_primary": false
+    },
+    {
+      "id": "doc-03",
+      "title": "Polymer & Masterbatch Tech Guide",
+      "category": "PDF • Technical Data",
+      "description": "Technical properties, melt flow index (MFI), density parameters, and additive ratios for HDPE, PP, and masterbatch solutions.",
+      "file_url": "",
+      "file_name": "",
+      "is_primary": false
+    },
+    {
+      "id": "doc-04",
+      "title": "Pharmaceutical Packaging & Security",
+      "category": "PDF • Compliance & Anti-Counterfeit",
+      "description": "Detailed technical specifications for Alu-Alu barrier foils, push-through blister foils, and optical anti-counterfeit holographic solutions.",
+      "file_url": "",
+      "file_name": "",
+      "is_primary": true
+    },
+    {
+      "id": "doc-05",
+      "title": "Industrial Machinery Procurement Guide",
+      "category": "PDF • Machinery & Turnkey",
+      "description": "Overview of plastic processing machinery, converting slitter rewinders, continuous ice cream freezers, and pharma lines.",
+      "file_url": "",
+      "file_name": "",
+      "is_primary": false
+    },
+    {
+      "id": "doc-06",
+      "title": "HealthBridge Medical Referral Guide",
+      "category": "PDF • Patient Information",
+      "description": "Guide for international patients seeking consultations and medical travel coordination in Thailand, Singapore, and Turkey.",
+      "file_url": "",
+      "file_name": "",
+      "is_primary": false
     }
   ]
 }

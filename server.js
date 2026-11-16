@@ -38,6 +38,7 @@ import authHandler from './api/auth.js';
 import inquiriesHandler from './api/inquiries.js';
 import productsHandler from './api/products.js';
 import newsHandler from './api/news.js';
+import downloadsHandler from './api/downloads.js';
 import statusHandler from './api/status.js';
 import backupHandler from './api/backup.js';
 
@@ -52,6 +53,13 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.pdf': 'application/pdf',
+  '.doc': 'application/msword',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.xls': 'application/vnd.ms-excel',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '.ppt': 'application/vnd.ms-powerpoint',
+  '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  '.zip': 'application/zip',
   '.txt': 'text/plain; charset=utf-8'
 };
 
@@ -84,6 +92,9 @@ const server = http.createServer(async (req, res) => {
   }
   if (pathname === '/api/news' || pathname === '/api/news.js') {
     return newsHandler(req, res);
+  }
+  if (pathname === '/api/downloads' || pathname === '/api/downloads.js') {
+    return downloadsHandler(req, res);
   }
   if (pathname === '/api/status' || pathname === '/api/status.js') {
     return statusHandler(req, res);

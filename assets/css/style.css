@@ -289,6 +289,12 @@ button, input, select, textarea {
   gap: 1.5rem;
 }
 
+.top-bar-left span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .top-bar a {
   color: var(--text-light-muted);
   display: inline-flex;
@@ -578,6 +584,40 @@ button, input, select, textarea {
   grid-template-columns: repeat(4, 1fr);
   gap: 1.75rem;
 }
+
+/* Responsive Two-Column Split Layouts */
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.split-grid-wide {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.split-grid-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 4rem;
+}
+
+.col-span-2 {
+  grid-column: span 2;
+}
+
+.order-1 { order: 1; }
+.order-2 { order: 2; }
 
 /* Premium Division Card */
 .division-card {
@@ -1430,6 +1470,20 @@ textarea.form-control {
   }
   .card-grid, .card-grid-3, .card-grid-4 {
     grid-template-columns: 1fr;
+  }
+  .split-grid,
+  .split-grid-wide,
+  .split-grid-cards,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+  .col-span-2 {
+    grid-column: span 1;
+  }
+  .order-1,
+  .order-2 {
+    order: initial;
   }
   .form-grid-2 {
     grid-template-columns: 1fr;

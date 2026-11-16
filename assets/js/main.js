@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollAnimations();
   initDynamicNews();
   initDynamicProducts();
+  initDynamicDownloads();
   initWhatsAppButton();
 });
 
@@ -321,6 +322,40 @@ async function initDynamicProducts() {
     }
   } catch (err) {
     console.warn('Dynamic product hydration skipped:', err);
+  }
+}
+
+/* --- Dynamic Downloads Center Hydration --- */
+async function initDynamicDownloads() {
+  const downloadsGrid = document.getElementById('downloadsGrid');
+  if (!downloadsGrid) return;
+
+  try {
+    const res = await fetch('api/downloads');
+    if (!res.ok) return;
+    const data = await res.json();
+    const docs = data.downloads;
+    if (!Array.isArray(docs) || docs.length === 0) return;
+
+    downloadsGrid.innerHTML = docs.map(item => {
+      const btnClass = item.is_primary ? 'btn-primary' : 'btn-outline-gold';
+      const actionHtml = item.file_url
+        ? `<a href="${escapeHtml(item.file_url)}" download="${escapeHtml(item.file_name || '')}" target="_blank" rel="noopener" class="btn ${btnClass} btn-sm">Download Document (PDF)</a>`
+        : `<button class="btn ${btnClass} btn-sm" data-open-rfq data-product="Document Request: ${escapeHtml(item.title)}">Request Document</button>`;
+
+      return `
+        <div class="product-card">
+          <h4>${escapeHtml(item.title)}</h4>
+          <span style="font-size: 0.82rem; color: var(--primary); font-weight: 700; margin-bottom: 0.5rem; display: block;">${escapeHtml(item.category || 'PDF • Documentation')}</span>
+          <p>${escapeHtml(item.description || '')}</p>
+          <div style="margin-top: auto; padding-top: 1rem;">
+            ${actionHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.warn('Dynamic downloads hydration skipped:', err);
   }
 }
 

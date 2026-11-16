@@ -121,6 +121,11 @@
             <span>News</span>
           </button>
 
+          <button class="nav-tab-btn" data-tab="downloads">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Downloads Center</span>
+          </button>
+
           <button class="nav-tab-btn" data-tab="settings">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             <span>Storage &amp; Backup</span>
@@ -395,6 +400,43 @@
         </section>
 
         <!-- ========================================== -->
+        <!-- TAB: DOWNLOADS CENTER CMS                  -->
+        <!-- ========================================== -->
+        <section id="tab-downloads" class="tab-pane">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Downloads Center</h1>
+              <p class="view-subtitle">Upload brochures, PDF catalogs, technical data sheets, and guides displayed on the public Downloads page.</p>
+            </div>
+            <div class="view-actions">
+              <button id="addDownloadBtn" class="btn-primary-portal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add Document / File</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="content-panel">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Document Title</th>
+                    <th>Category / Type</th>
+                    <th>Description</th>
+                    <th>File Status</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="downloadsTableBody">
+                  <tr><td colspan="5" class="table-empty">Loading documents...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
         <!-- TAB 5: STORAGE & DATA BACKUP               -->
         <!-- ========================================== -->
         <section id="tab-settings" class="tab-pane">
@@ -438,6 +480,10 @@
                 <div class="config-row">
                   <span class="config-label">Published News Articles:</span>
                   <span id="settingsCountNews" class="code-pill">0</span>
+                </div>
+                <div class="config-row">
+                  <span class="config-label">Downloads Center Documents:</span>
+                  <span id="settingsCountDownloads" class="code-pill">0</span>
                 </div>
 
                 <div class="info-alert">
@@ -687,6 +733,52 @@
         <div class="modal-footer">
           <button type="button" class="btn-secondary" data-close-modal>Cancel</button>
           <button type="submit" class="btn-primary-portal">Publish Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT DOWNLOAD MODAL -->
+  <div id="downloadModal" class="portal-modal-overlay">
+    <div class="portal-modal-card">
+      <div class="modal-header">
+        <h2 id="downloadModalTitle" class="modal-title">Add Downloadable Document</h2>
+        <button class="modal-close-btn" data-close-modal>&times;</button>
+      </div>
+
+      <form id="downloadForm">
+        <input type="hidden" id="dlFormId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="dlFormTitle">Document Title *</label>
+            <input type="text" id="dlFormTitle" required placeholder="e.g. TradeAxis Corporate Profile 2026">
+          </div>
+
+          <div class="form-group">
+            <label for="dlFormCategory">Category / Type Label</label>
+            <input type="text" id="dlFormCategory" placeholder="e.g. PDF • Full Catalog">
+          </div>
+
+          <div class="form-group">
+            <label for="dlFormDesc">Description</label>
+            <textarea id="dlFormDesc" rows="3" placeholder="Brief summary of the catalog, datasheet, or brochure contents..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="dlFormFile">Upload File (PDF, Office Doc, ZIP — Max 25 MB)</label>
+            <input type="file" id="dlFormFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" style="padding: 10px; border: 1px dashed #CBD5E1; background: #F8FAFC;">
+            <div id="dlFormExistingFile" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;"></div>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="dlFormPrimary">
+            <label for="dlFormPrimary">Highlight with primary button style</label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn-primary-portal">Save Document</button>
         </div>
       </form>
     </div>

@@ -61,7 +61,8 @@ export default async function handler(req, res) {
         counts: {
           inquiries: restored.inquiries.length,
           products: restored.products.length,
-          news: restored.news.length
+          news: restored.news.length,
+          downloads: restored.downloads.length
         }
       }));
       return;

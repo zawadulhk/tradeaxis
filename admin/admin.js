@@ -14,6 +14,7 @@ const STATE = {
   inquiries: [],
   products: [],
   news: [],
+  downloads: [],
   activeInquiry: null,
   currentTab: 'overview'
 };
@@ -210,7 +211,8 @@ async function loadAllData() {
       fetchStatus(),
       fetchInquiries(),
       fetchProducts(),
-      fetchNews()
+      fetchNews(),
+      fetchDownloads()
     ]);
     renderOverview();
   } catch (err) {
@@ -230,6 +232,7 @@ async function fetchStatus() {
     const countInq = document.getElementById('settingsCountInquiries');
     const countProd = document.getElementById('settingsCountProducts');
     const countNews = document.getElementById('settingsCountNews');
+    const countDl = document.getElementById('settingsCountDownloads');
 
     if (res.ok && data.connected !== false) {
       if (badge) badge.classList.add('connected');
@@ -250,6 +253,7 @@ async function fetchStatus() {
       if (countInq) countInq.textContent = data.counts.inquiries ?? STATE.inquiries.length;
       if (countProd) countProd.textContent = data.counts.products ?? STATE.products.length;
       if (countNews) countNews.textContent = data.counts.news ?? STATE.news.length;
+      if (countDl) countDl.textContent = data.counts.downloads ?? STATE.downloads.length;
     }
   } catch (err) {
     console.warn('Status fetch error:', err);
@@ -318,6 +322,17 @@ async function fetchNews() {
     renderNewsTable();
   } catch (err) {
     console.warn('News fetch error:', err);
+  }
+}
+
+async function fetchDownloads() {
+  try {
+    const res = await apiFetch(`${API_BASE}/downloads`);
+    const data = await res.json();
+    STATE.downloads = data.downloads || [];
+    renderDownloadsTable();
+  } catch (err) {
+    console.warn('Downloads fetch error:', err);
   }
 }
 
@@ -541,6 +556,47 @@ function renderNewsTable() {
   `).join('');
 }
 
+function renderDownloadsTable() {
+  const tbody = document.getElementById('downloadsTableBody');
+  if (!tbody) return;
+
+  if (STATE.downloads.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="table-empty">No downloadable documents added yet. Click "Add Document / File" to upload one.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = STATE.downloads.map(item => {
+    const hasFile = Boolean(item.file_url);
+    const statusBadge = hasFile
+      ? `<a href="../${escapeHtml(item.file_url)}" target="_blank" rel="noopener" class="badge-pill gold" style="text-decoration:none;">File Attached (${escapeHtml(item.file_name || 'Download')})</a>`
+      : `<span class="badge-pill">Enquiry Request Only (No file attached)</span>`;
+
+    return `
+      <tr>
+        <td>
+          <strong style="color:var(--text-primary);">${escapeHtml(item.title)}</strong>
+          ${item.is_primary ? '<div style="font-size:0.72rem; color:var(--gold-dark); margin-top:2px;">Primary Highlight</div>' : ''}
+        </td>
+        <td><span class="code-pill">${escapeHtml(item.category || 'PDF • Documentation')}</span></td>
+        <td style="max-width: 280px;">
+          <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.4;">${escapeHtml(item.description || '—')}</div>
+        </td>
+        <td>${statusBadge}</td>
+        <td>
+          <div class="action-btn-row">
+            <button class="btn-icon" title="Edit / Upload File" onclick="openEditDownloadModal('${item.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-icon delete" title="Delete Document" onclick="deleteDownloadRecord('${item.id}')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
 // ==========================================================================
 // 6. INQUIRY DETAIL MODAL & CRM ACTIONS
 // ==========================================================================
@@ -721,6 +777,56 @@ window.deleteNewsRecord = async function(id) {
   }
 };
 
+// ==========================================================================
+// 8B. DOWNLOADS CENTER MODAL & CMS ACTIONS
+// ==========================================================================
+window.openAddDownloadModal = function() {
+  document.getElementById('downloadModalTitle').textContent = 'Add Downloadable Document';
+  document.getElementById('dlFormId').value = '';
+  document.getElementById('downloadForm').reset();
+  document.getElementById('dlFormExistingFile').textContent = 'No file attached yet (Visitors can request this document via Enquiry modal until a file is uploaded).';
+  openModal('downloadModal');
+};
+
+window.openEditDownloadModal = function(id) {
+  const item = STATE.downloads.find(x => x.id === id);
+  if (!item) return;
+
+  document.getElementById('downloadModalTitle').textContent = 'Edit Document / Upload File';
+  document.getElementById('dlFormId').value = item.id;
+  document.getElementById('dlFormTitle').value = item.title || '';
+  document.getElementById('dlFormCategory').value = item.category || '';
+  document.getElementById('dlFormDesc').value = item.description || '';
+  document.getElementById('dlFormFile').value = '';
+  document.getElementById('dlFormPrimary').checked = Boolean(item.is_primary);
+  document.getElementById('dlFormExistingFile').textContent = item.file_url
+    ? `Currently attached: ${item.file_name || item.file_url} (select a new file above to replace)`
+    : 'No file currently attached.';
+  openModal('downloadModal');
+};
+
+window.deleteDownloadRecord = async function(id) {
+  if (!confirm('Are you sure you want to delete this document from the Downloads Center?')) return;
+  try {
+    const res = await apiFetch(`${API_BASE}/downloads?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (res.ok) {
+      showToast('Document removed');
+      await fetchDownloads();
+    }
+  } catch (err) {
+    showToast('Failed to delete document');
+  }
+};
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error('Failed to read selected file'));
+    reader.readAsDataURL(file);
+  });
+}
+
 function initRte() {
   const toolbar = document.getElementById('newsRteToolbar');
   const editor = document.getElementById('newsFormEditor');
@@ -833,6 +939,64 @@ function initForms() {
       }
     } catch (err) {
       showToast('Failed to save article');
+    }
+  });
+
+  // Downloads Center Form
+  document.getElementById('addDownloadBtn')?.addEventListener('click', openAddDownloadModal);
+  document.getElementById('downloadForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('dlFormId').value;
+    const fileInput = document.getElementById('dlFormFile');
+    const selectedFile = fileInput?.files?.[0];
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const origBtnText = submitBtn ? submitBtn.textContent : 'Save Document';
+
+    if (selectedFile && selectedFile.size > 25 * 1024 * 1024) {
+      showToast('File size exceeds the 25 MB limit');
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = selectedFile ? 'Uploading...' : 'Saving...';
+    }
+
+    try {
+      const payload = {
+        id: id || undefined,
+        title: document.getElementById('dlFormTitle').value.trim(),
+        category: document.getElementById('dlFormCategory').value.trim() || 'PDF • Documentation',
+        description: document.getElementById('dlFormDesc').value.trim(),
+        is_primary: document.getElementById('dlFormPrimary').checked
+      };
+
+      if (selectedFile) {
+        payload.file_name = selectedFile.name;
+        payload.file_data = await readFileAsDataUrl(selectedFile);
+      }
+
+      const res = await apiFetch(`${API_BASE}/downloads`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        showToast(id ? 'Document updated' : 'Document added');
+        closeModal('downloadModal');
+        await fetchDownloads();
+        await fetchStatus();
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        showToast(errData.error || 'Failed to save document');
+      }
+    } catch (err) {
+      showToast('Failed to upload/save document');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origBtnText;
+      }
     }
   });
 
