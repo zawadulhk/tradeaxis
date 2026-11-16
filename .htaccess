@@ -24,7 +24,7 @@ Options -Indexes
 </IfModule>
 
 # Block public HTTP access to environment files, Node server scripts, and package metadata
-<FilesMatch "^(\.env.*|server\.js|package(-lock)?\.json|vercel\.json)$">
+<FilesMatch "^(\.env.*|server\.js|package(-lock)?\.json)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
