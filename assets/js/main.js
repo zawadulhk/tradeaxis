@@ -190,7 +190,7 @@ async function initDynamicNews() {
         return `
           <article class="division-card" id="article-${item.id || idx}" style="opacity: 1; transform: translateY(0);">
             <div class="card-thumb">
-              <img src="${imgSrc}" alt="${escapeHtml(item.title)}">
+              <img src="${imgSrc}" alt="${escapeHtml(item.title)}" loading="lazy">
               <span class="badge-tag">${escapeHtml(item.category || 'News')}</span>
             </div>
             <div class="card-body">
@@ -220,7 +220,7 @@ async function initDynamicNews() {
         return `
           <div class="division-card" style="opacity: 1; transform: translateY(0);">
             <div class="card-thumb" style="height: 180px;">
-              <img src="${imgSrc}" alt="${escapeHtml(item.title)}">
+              <img src="${imgSrc}" alt="${escapeHtml(item.title)}" loading="lazy">
               <span class="badge-tag">${escapeHtml(item.category || 'News')}</span>
             </div>
             <div class="card-body">
@@ -299,7 +299,7 @@ async function initDynamicProducts() {
         return `
           <div class="product-item-card division-card" data-category="${escapeHtml(item.category || 'jute')}" style="opacity: 1; transform: translateY(0);">
             <div class="card-thumb">
-              <img src="${imgSrc}" alt="${escapeHtml(item.name)}">
+              <img src="${imgSrc}" alt="${escapeHtml(item.name)}" loading="lazy">
               <span class="badge-tag">${escapeHtml(catLabel)}</span>
             </div>
             <div class="card-body">
